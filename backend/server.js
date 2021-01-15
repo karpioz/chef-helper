@@ -1,13 +1,29 @@
 import express from "express";
 import dotenv from "dotenv";
 import colors from "colors";
+import morgan from "morgan";
+import cors from "cors";
+
+import connectDB from "./config/db.js";
+
+dotenv.config();
+
+// DB Connection from config.ConnectDB file
+connectDB();
 
 // importing routes
 import authRoutes from "./routes/authRoutes.js";
 
-dotenv.config();
-
 const app = express();
+app.use(express.json());
+
+// apps middlewares
+// morgan - HTTP request logger
+app.use(morgan("dev"));
+// cors allow request from all origins
+if ((process.env.NODE_ENV = "development")) {
+  app.use(cors({ origin: "http://localhost:3000" }));
+}
 
 // middleware
 app.use("/api", authRoutes);
