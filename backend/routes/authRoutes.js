@@ -3,10 +3,10 @@
 import express from "express";
 const router = express.Router();
 
-router.get("/signup", (req, res) => {
-  res.json({
-    data: "you hit signup endpoint",
-  });
-});
+// importing controllers
+import { signupUser } from "../controllers/authController.js";
+
+// routes
+router.get("/signup", signupUser);
 
 export default router;
