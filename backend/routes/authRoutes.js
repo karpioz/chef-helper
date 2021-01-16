@@ -7,18 +7,30 @@ const router = express.Router();
 import {
   signupUser,
   signupUserWithSendGrid,
+  loginUser,
+  accountActivation,
 } from "../controllers/authController.js";
 
 // importing validators
-import { userSignUpValidator } from "../validators/authValidator.js";
+import {
+  userLoginValidator,
+  userSignUpValidator,
+} from "../validators/authValidator.js";
 import { runValidation } from "../validators/index.js";
 
 // routes
+// sign-up
 router.post(
   "/signup",
   userSignUpValidator,
   runValidation,
   signupUserWithSendGrid
 );
+
+// log-in
+router.post("/login", userLoginValidator, loginUser);
+
+// account email activation
+router.post("/activate", accountActivation);
 
 export default router;

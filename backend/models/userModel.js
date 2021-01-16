@@ -34,6 +34,7 @@ const userSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+// checking if password is correct
 userSchema.methods.matchPassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };

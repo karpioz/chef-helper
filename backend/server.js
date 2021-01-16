@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import colors from "colors";
 import morgan from "morgan";
 import cors from "cors";
+import bodyParser from "body-parser";
 
 import connectDB from "./config/db.js";
 
@@ -18,6 +19,8 @@ const app = express();
 app.use(express.json());
 
 // apps middlewares
+
+//app.use(bodyParser.json());
 // morgan - HTTP request logger
 app.use(morgan("dev"));
 // cors allow request from all origins

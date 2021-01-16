@@ -88,4 +88,80 @@ const signupUserWithSendGrid = (req, res) => {
     });
 };
 
-export { signupUser, signupUserWithSendGrid };
+// activating an account
+
+const accountActivation = (req, res) => {
+  const { token } = req.body;
+
+  // veryfing the token
+  if (token) {
+    jwt.verify(
+      token,
+      process.env.JWT_ACCOUNT_ACTIVATION,
+      function (err, decodedToken) {
+        if (err) {
+          console.log("JWT Verify Activation Error:", err);
+          return res.status(401).json({
+            error: "Expired link. Signup again",
+          });
+        }
+
+        const { name, email, password } = jwt.decode(token);
+
+        // saving new user
+        const user = new User({ name, email, password });
+
+        user.save((err, user) => {
+          if (err) {
+            console.log("SAVE USER IN ACCOUNT ACTIVATION ERROR", err);
+            return res.status(401).json({
+              error: "Something went wrong. Please sign up again",
+            });
+          }
+          return res.json({
+            message: "User has been added to the database",
+          });
+        });
+      }
+    );
+  } else {
+    return res.json({
+      message: "Something went wrong. Try again.",
+    });
+  }
+};
+
+// login user
+
+const loginUser = (req, res) => {
+  const { email, password } = req.body;
+  // check for user in db
+  User.findOne({ email }).exec((err, user) => {
+    if (err || !user) {
+      return res.status(400).json({
+        error: "User doesn't exits",
+      });
+    }
+
+    // checking password
+    if (!user.matchPassword(password)) {
+      return res.status(400).json({
+        error: "Email or password is wrong",
+      });
+    }
+
+    // generate token for the client valid for 7 days
+    const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "7d",
+    });
+    // collecting user data from db
+    const { _id, name, email, role } = user;
+
+    return res.json({
+      token,
+      user: { _id, name, email, role },
+    });
+  });
+};
+
+export { signupUser, signupUserWithSendGrid, accountActivation, loginUser };
