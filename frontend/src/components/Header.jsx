@@ -1,5 +1,5 @@
 import React from "react";
-import { Navbar, Nav, Container, NavDropdown } from "react-bootstrap";
+import { Navbar, Nav, Container } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 
 const Header = () => {
@@ -13,9 +13,24 @@ const Header = () => {
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="ml-auto">
-              <LinkContainer to="/cart">
+              <LinkContainer to="/recipes">
                 <Nav.Link>
-                  <i className="fas fa-shopping-cart"></i> Cart
+                  <i class="fas fa-utensils"></i> Recipes
+                </Nav.Link>
+              </LinkContainer>
+              <LinkContainer to="/tasks">
+                <Nav.Link>
+                  <i class="fas fa-clipboard-list"></i> Tasks
+                </Nav.Link>
+              </LinkContainer>
+              <LinkContainer to="/rota">
+                <Nav.Link>
+                  <i class="far fa-calendar-alt"></i> Rota
+                </Nav.Link>
+              </LinkContainer>
+              <LinkContainer to="/pantry">
+                <Nav.Link>
+                  <i class="fas fa-clipboard"></i> Pantry
                 </Nav.Link>
               </LinkContainer>
               {/* {userInfo ? (
@@ -28,7 +43,7 @@ const Header = () => {
 							) : */}{" "}
               <LinkContainer to="/login">
                 <Nav.Link>
-                  <i className="fas fa-user"></i> Sign In
+                  <i className="fas fa-user"></i> Login
                 </Nav.Link>
               </LinkContainer>
             </Nav>
