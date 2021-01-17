@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Form, Button, Row, Col } from 'react-bootstrap'
-//import { useDispatch, useSelector } from 'react-redux'
-//import Message from '../components/Message.js'
-//import Loader from '../components/Loader.js'
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.min.css'
 import FormContainer from '../components/FormContainer'
-//import { register } from '../actions/userActions'
+import axios from 'axios'
 
 const RegisterScreen = ({ location, history }) => {
 	// state with useState hook
@@ -20,7 +19,31 @@ const RegisterScreen = ({ location, history }) => {
 	const { name, email, password, confirmPassword, buttonText } = formData
 
 	// submiting the form
-	const handleSubmit = event => {}
+	const handleSubmit = event => {
+		event.preventDefault()
+		setFormData({ ...formData, buttonText: 'Submitting' })
+		// axios to connect with backend
+		axios({
+			method: 'POST',
+			url: `${process.env.REACT_APP_API}/signup`,
+			data: { name, email, password }
+		})
+			.then(response => {
+				setFormData({
+					...formData,
+					name: '',
+					email: '',
+					password: '',
+					buttonText: 'Submited'
+				})
+				toast.success(response.data.message)
+			})
+			.catch(error => {
+				console.log('SIGNUP ERROR', error.response.data)
+				setFormData({ ...formData, buttonText: 'Submit' })
+				toast.error(error.response.data.error)
+			})
+	}
 
 	// handling input changes
 	const handleInputChange = name => event => {
@@ -32,6 +55,8 @@ const RegisterScreen = ({ location, history }) => {
 	return (
 		<FormContainer>
 			<h1 className='text-center'>Register</h1>
+
+			<ToastContainer />
 
 			<Form onSubmit={handleSubmit}>
 				<Form.Group controlId='name'>
@@ -74,7 +99,6 @@ const RegisterScreen = ({ location, history }) => {
 					{buttonText}
 				</Button>
 			</Form>
-			{JSON.stringify(name, email, password)}
 
 			<Row className='py-3'>
 				{/* <Col>
