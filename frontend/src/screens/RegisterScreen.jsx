@@ -8,30 +8,57 @@ import FormContainer from '../components/FormContainer'
 //import { register } from '../actions/userActions'
 
 const RegisterScreen = ({ location, history }) => {
-	const [email, setEmail] = useState('')
-	const [password, setPassword] = useState('')
-	const [confirmPassword, setConfirmPassword] = useState('')
-	const [name, setName] = useState('')
-	const [message, setMessage] = useState(null)
+	// state with useState hook
+	const [formData, setFormData] = useState({
+		name: 'Pawel Karpinski',
+		email: 'karpioz@example.com',
+		password: 'admin123',
+		confirmPassword: 'admin1234',
+		buttonText: 'Submit'
+	})
+	// destructuring state
+	const { name, email, password, confirmPassword, buttonText } = formData
+
+	// submiting the form
+	const handleSubmit = event => {}
+
+	// handling input changes
+	const handleInputChange = name => event => {
+		console.log(event.target.value)
+		// getting existing state and update the key with same name as function argument
+		setFormData({ ...formData, [name]: event.target.value })
+	}
 
 	return (
 		<FormContainer>
 			<h1 className='text-center'>Register</h1>
 
-			<Form>
+			<Form onSubmit={handleSubmit}>
 				<Form.Group controlId='name'>
 					<Form.Label>Name</Form.Label>
-					<Form.Control type='name' placeholder='Enter name'></Form.Control>
+					<Form.Control
+						type='text'
+						placeholder='Enter name'
+						value={name}
+						onChange={handleInputChange('name')}
+					></Form.Control>
 				</Form.Group>
 				<Form.Group controlId='email'>
 					<Form.Label>Email Address</Form.Label>
-					<Form.Control type='email' placeholder='Enter Email'></Form.Control>
+					<Form.Control
+						type='email'
+						placeholder='Enter Email'
+						value={email}
+						onChange={handleInputChange('email')}
+					></Form.Control>
 				</Form.Group>
 				<Form.Group controlId='password'>
 					<Form.Label>Password</Form.Label>
 					<Form.Control
 						type='password'
 						placeholder='Enter password'
+						value={password}
+						onChange={handleInputChange('password')}
 					></Form.Control>
 				</Form.Group>
 				<Form.Group controlId='confirmPassword'>
@@ -39,13 +66,15 @@ const RegisterScreen = ({ location, history }) => {
 					<Form.Control
 						type='password'
 						placeholder='Confirm password'
+						value={confirmPassword}
+						onChange={handleInputChange('confirmPassword')}
 					></Form.Control>
 				</Form.Group>
-
 				<Button type='submit' variant='primary'>
-					Register
+					{buttonText}
 				</Button>
 			</Form>
+			{JSON.stringify(name, email, password)}
 
 			<Row className='py-3'>
 				{/* <Col>
