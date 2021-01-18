@@ -59,7 +59,7 @@ const signupUserWithSendGrid = (req, res) => {
   const token = jwt.sign(
     { name, email, password },
     process.env.JWT_ACCOUNT_ACTIVATION,
-    { expiresIn: "10m" }
+    { expiresIn: "15m" }
   );
 
   // creating activating email
@@ -80,7 +80,7 @@ const signupUserWithSendGrid = (req, res) => {
     .send(emailData)
     .then((sent) => {
       return res.json({
-        message: `Activation email has been sent to ${email}. Activation link will expire in 10 minutes`,
+        message: `Activation email has been sent to ${email}. Activation link will expire in 15 minutes`,
       });
     })
     .catch((err) => {
