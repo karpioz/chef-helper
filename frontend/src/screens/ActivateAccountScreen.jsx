@@ -5,7 +5,7 @@ import "react-toastify/dist/ReactToastify.min.css";
 import axios from "axios";
 import jwt from "jsonwebtoken";
 
-const ActivateAccountScreen = ({ location, history, match }) => {
+const ActivateAccountScreen = ({ match }) => {
   // state with useState hook
   const [formData, setFormData] = useState({
     name: "",

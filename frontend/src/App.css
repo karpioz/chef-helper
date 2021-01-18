@@ -1,17 +1,17 @@
 main {
-	min-height: 85vh;
+  min-height: 85vh;
 }
 
 #basic-navbar-nav i {
-	color: #fff;
+  color: #ffc107;
 }
 
 .logo__text-chef,
 .logo__text-helper {
-	font-family: 'Kaushan Script', cursive;
-	font-size: 2.5rem;
+  font-family: "Kaushan Script", cursive;
+  font-size: 2.5rem;
 }
 
 .logo__text-helper {
-	font-size: 1.5rem;
+  font-size: 1.5rem;
 }
