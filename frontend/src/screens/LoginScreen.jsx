@@ -5,6 +5,7 @@ import FormContainer from "../components/FormContainer";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
+import { authenticate, isAuth } from "../utilities/authUtilities";
 
 const LoginScreen = ({ location, history }) => {
   // state with useState hook
@@ -28,17 +29,16 @@ const LoginScreen = ({ location, history }) => {
     })
       .then((response) => {
         // save the response (user and token) local storage/cookie
-
-        // emptying the state
-        setFormData({
-          ...formData,
-          name: "",
-          email: "",
-          password: "",
-          buttonText: "Success",
+        authenticate(response, () => {
+          // emptying the state
+          setFormData({
+            ...formData,
+            email: "",
+            password: "",
+          });
+          // toast message after successful login
+          toast.success(`Hi ${response.data.user.name}, Welcome back!`);
         });
-        // toast message after successful login
-        toast.success(`Hi ${response.data.user.name}, Welcome back!`);
       })
       .catch((error) => {
         console.log("SIGNUP ERROR", error.response.data);

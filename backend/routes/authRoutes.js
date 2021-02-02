@@ -9,6 +9,7 @@ import {
   signupUserWithSendGrid,
   loginUser,
   accountActivation,
+  authUser,
 } from "../controllers/authController.js";
 
 // importing validators
@@ -28,7 +29,7 @@ router.post(
 );
 
 // log-in
-router.post("/login", userLoginValidator, loginUser);
+router.post("/login", userLoginValidator, authUser);
 
 // account email activation
 router.post("/activate", accountActivation);

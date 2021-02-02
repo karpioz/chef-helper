@@ -2,6 +2,7 @@ import User from "../models/userModel.js";
 import jwt from "jsonwebtoken";
 import sendGridMail from "@sendgrid/mail";
 import dotenv from "dotenv";
+import asyncHandler from "express-async-handler";
 
 dotenv.config();
 
@@ -164,4 +165,42 @@ const loginUser = (req, res) => {
   });
 };
 
-export { signupUser, signupUserWithSendGrid, accountActivation, loginUser };
+// login user v2
+const authUser = asyncHandler(async (req, res) => {
+  const { email, password } = req.body;
+
+  const user = await User.findOne({ email });
+
+  if (!user) {
+    return res.status(400).json({
+      error: "User doesn't exits",
+    });
+  }
+
+  if (user && (await user.matchPassword(password))) {
+    // generate token for the client valid for 7 days
+    const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "7d",
+    });
+    // collecting user data from db
+    const { _id, name, email, role } = user;
+
+    return res.json({
+      token,
+      user: { _id, name, email, role },
+    });
+  } else {
+    res.status(401).json({
+      error: "Email or password is wrong",
+    });
+    throw new Error("Invalid email or password");
+  }
+});
+
+export {
+  signupUser,
+  signupUserWithSendGrid,
+  accountActivation,
+  loginUser,
+  authUser,
+};
