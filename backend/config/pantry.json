@@ -1,0 +1,73 @@
+[{
+    "name": "Plain Flour",
+    "countInStock": 20000,
+    "price": 18,
+    "defaultWeightInGrams": 15000
+},
+{
+    "name": "Bread Flour",
+    "countInStock": 20000,
+    "price": 15,
+    "defaultWeightInGrams": 10000
+},
+{
+    "name": "Sugar",
+    "countInStock": 20000,
+    "price": 15,
+    "defaultWeightInGrams": 10000
+},
+{
+    "name": "Salt",
+    "countInStock": 20000,
+    "price": 15,
+    "defaultWeightInGrams": 10000
+},
+{
+    "name": "Dry Yeast",
+    "countInStock": 200,
+    "price": 2,
+    "defaultWeightInGrams": 100 
+},
+{
+    "name": "Extra Virgin Oil",
+    "countInStock": 4000,
+    "price": 10.5,
+    "defaultWeightInGrams": 2000
+},
+{
+    "name": "Onions",
+    "countInStock": 10000,
+    "price": 0.75,
+    "defaultWeightInGrams": 1000
+},
+{
+    "name": "Tomatoes Fresh",
+    "countInStock": 5000,
+    "price": 2.2,
+    "defaultWeightInGrams": 1000
+},
+{
+    "name": "Tomatoes Canned",
+    "countInStock": 3000,
+    "price": 0.75,
+    "defaultWeightInGrams": 400
+},
+{
+    "name": "Red Pepper Spice",
+    "countInStock": 200,
+    "price": 5.5,
+    "defaultWeightInGrams": 100
+},
+{
+    "name": "Thyme Fresh",
+    "countInStock": 400,
+    "price": 0.85,
+    "defaultWeightInGrams": 200
+},
+{
+    "name": "Basil Fresh",
+    "countInStock": 400,
+    "price": 0.85,
+    "defaultWeightInGrams": 200
+}
+]

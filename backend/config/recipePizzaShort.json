@@ -1,0 +1,48 @@
+{
+    "recipe": {
+    "label": "Pizza Dough",
+    "image": "https://www.edamam.com/web-img/284/2849b3eb3b46aa0e682572d48f86d487.jpg",
+    "healthLabels": [
+    "Vegetarian",
+    "Peanut-Free",
+    "Tree-Nut-Free",
+    "Alcohol-Free"
+    ],
+    "ingredientLines": [
+    "500 g bread flour(3 3/4 cups)",
+    "2 1/2 tsp Dry Yeast instant or active (10 grams)",
+    "3/4 tsp Table Salt(5 grams)",
+    "3/4 tsp Sugar, plus a pinch (about 3 grams)",
+    "1 1/2 cup water at room temperature"
+    ],
+    "ingredients": [
+    {
+    "productId": "6021421fb76228076c983f7b",  
+    "text": "500 g bread flour(3 3/4 cups)",
+    "weight": 513.75
+    },
+    {
+    "productId": "6021421fb76228076c983f7e", 
+    "text": "2 1/2 tsp Dry Yeast instant or active (10 grams)",
+    "weight": 10
+    },
+    {
+    "productId": "6021421fb76228076c983f7d", 
+    "text": "3/4 tsp Table Salt(5 grams)",
+    "weight": 5
+    },
+    {
+    "productId": "6021421fb76228076c983f7c", 
+    "text": "3/4 tsp Sugar, plus a pinch (about 3 grams)",
+    "weight": 3
+    },
+    {
+    "text": "1 1/2 cup water at room temperature",
+    "weight": 355.5
+    }
+    ],
+    "calories": 1100,
+    "totalTime": 0,
+    "bookmarked": false
+    }
+}

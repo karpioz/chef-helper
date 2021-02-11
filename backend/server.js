@@ -14,6 +14,8 @@ connectDB();
 
 // importing routes
 import authRoutes from "./routes/authRoutes.js";
+import recipesRoutes from "./routes/recipesRoutes.js";
+import productsRoutes from "./routes/productsRoutes.js";
 
 const app = express();
 app.use(express.json());
@@ -30,6 +32,8 @@ if ((process.env.NODE_ENV = "development")) {
 
 // middleware
 app.use("/api", authRoutes);
+app.use("/api/recipes", recipesRoutes);
+app.use("/api/products", productsRoutes);
 
 app.get("/", (req, res) => {
   res.send("API is running...");
