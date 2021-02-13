@@ -8,6 +8,8 @@ import {
   Modal,
   Form,
 } from "react-bootstrap";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.min.css";
 import axios from "axios";
 
 const PantryScreen = () => {
@@ -18,6 +20,7 @@ const PantryScreen = () => {
   const [modalDataAdd, setModalDataAdd] = useState(0);
   const [modalDataSubt, setModalDataSubt] = useState(0);
   const [show, setShow] = useState(false);
+  const [submit, setSubmit] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = (id) => {
     console.log(id);
@@ -25,14 +28,21 @@ const PantryScreen = () => {
     setShow(true);
   };
 
-  const handleModalSubmit = (e, id) => {
-    //
+  const handleModalSubmit = (e) => {
+    const { name, countInStock } = modalData;
     e.preventDefault();
-    //console.log(`${process.env.REACT_APP_API}/products/update/${id}`);
-    setProducts(() =>
-      products.find((product) => product._id === modalData._id)
-    );
-    console.log("Products after update:" + products);
+    axios({
+      method: "PATCH",
+      url: `${process.env.REACT_APP_API}/products/${modalData._id}`,
+      data: { name, countInStock },
+    }).then((response) => {
+      console.log("qyantity updated", response);
+      toast.success(`Quantity of ${name} updated sucesfully!`);
+      setSubmit(true);
+    });
+
+    //closing modal
+    handleClose();
   };
 
   const handleAddQuantity = (e) => {
@@ -55,19 +65,25 @@ const PantryScreen = () => {
   };
 
   // fetching products on load
-  useEffect(() => {
-    const fetchProducts = async () => {
-      const { data } = await axios.get(`${process.env.REACT_APP_API}/products`);
-      setProducts(data);
-    };
+  const fetchProducts = async () => {
+    const { data } = await axios.get(`${process.env.REACT_APP_API}/products`);
+    setProducts(data);
+  };
 
+  useEffect(() => {
     fetchProducts();
   }, []);
+
+  useEffect(() => {
+    fetchProducts();
+  }, [submit]);
 
   return (
     <Container>
       <Row>
         <Col>
+          <ToastContainer />
+
           <h1>Pantry</h1>
         </Col>
       </Row>
@@ -106,7 +122,7 @@ const PantryScreen = () => {
             <span className="text-danger">{modalData.name}</span>
           </Modal.Title>
         </Modal.Header>
-        <Form onSubmit={(e) => handleModalSubmit(modalData._id)}>
+        <Form onSubmit={handleModalSubmit}>
           <Modal.Body>
             <Form.Group>
               <Form.Label>Available Quantity (grams)</Form.Label>
