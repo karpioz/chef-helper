@@ -4,10 +4,17 @@ import express from "express";
 const router = express.Router();
 
 // Importing controllers
-import { getProducts } from "../controllers/productsController.js";
+import {
+  getProducts,
+  updateProductQuantity,
+  updateProductQuantityTwo,
+} from "../controllers/productsController.js";
 
 // routes
-// read specific user data
+// read all products data
 router.get("/", getProducts);
+
+// update product data
+router.put("/update/:id", updateProductQuantityTwo);
 
 export default router;

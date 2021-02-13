@@ -10,4 +10,31 @@ const getProducts = asyncHandler(async (req, res) => {
   res.json(products);
 });
 
-export { getProducts };
+// @desc update product quantity
+// @route PATCH /api/products/update/:id
+// @access Private
+
+const updateProductQuantity = asyncHandler(async (req, res, next) => {
+  try {
+    const product = await Product.findById(req.params.id);
+    if (!product) {
+      return res.status(404).json({ error: "Product not found" });
+    }
+    await product.set(req.body).save();
+  } catch (err) {
+    next(err);
+  }
+});
+
+const updateProductQuantityTwo = asyncHandler(async (req, res) => {
+  const product = await Product.findById(req.params.id);
+
+  if (product) {
+    await product.save();
+  } else {
+    res.status(404);
+    throw new Error("Product not Found");
+  }
+});
+
+export { getProducts, updateProductQuantity, updateProductQuantityTwo };

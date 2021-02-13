@@ -25,22 +25,22 @@ const Header = () => {
             <Nav className="ml-auto">
               <LinkContainer to="/recipes">
                 <Nav.Link>
-                  <i class="fas fa-utensils"></i> Recipes
+                  <i className="fas fa-utensils"></i> Recipes
                 </Nav.Link>
               </LinkContainer>
               <LinkContainer to="/tasks">
                 <Nav.Link>
-                  <i class="fas fa-clipboard-list"></i> Tasks
+                  <i className="fas fa-clipboard-list"></i> Tasks
                 </Nav.Link>
               </LinkContainer>
               <LinkContainer to="/rota">
                 <Nav.Link>
-                  <i class="far fa-calendar-alt"></i> Rota
+                  <i className="far fa-calendar-alt"></i> Rota
                 </Nav.Link>
               </LinkContainer>
               <LinkContainer to="/pantry">
                 <Nav.Link>
-                  <i class="fas fa-clipboard"></i> Pantry
+                  <i className="fas fa-clipboard"></i> Pantry
                 </Nav.Link>
               </LinkContainer>
               {/* {userInfo ? (

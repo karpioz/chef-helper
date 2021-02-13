@@ -10,9 +10,9 @@ import {
 } from "../controllers/recipesController.js";
 
 // routes
-// read specific user data
+// read all recipes data
 router.get("/", getRecipes);
-// read specific workshop data
+// read specific recipe data
 router.get("/:id", readRecipeData);
 
 export default router;
