@@ -11,6 +11,7 @@ import {
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
 import axios from "axios";
+import { isAuth } from "../utilities/authUtilities";
 
 const PantryScreen = () => {
   const [products, setProducts] = useState([]);
@@ -20,11 +21,16 @@ const PantryScreen = () => {
   const [modalDataAdd, setModalDataAdd] = useState(0);
   const [modalDataSubt, setModalDataSubt] = useState(0);
   const [show, setShow] = useState(false);
-  const [submit, setSubmit] = useState(false);
+  const [submitAdd, setSubmitAdd] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = (id) => {
     console.log(id);
     setModalData(() => products.find((product) => product._id === id));
+    setShow(true);
+  };
+
+  const handleShowRemove = (id) => {
+    console.log(id);
     setShow(true);
   };
 
@@ -38,7 +44,7 @@ const PantryScreen = () => {
     }).then((response) => {
       console.log("qyantity updated", response);
       toast.success(`Quantity of ${name} updated sucesfully!`);
-      setSubmit(true);
+      setSubmitAdd(true);
     });
 
     //closing modal
@@ -75,8 +81,10 @@ const PantryScreen = () => {
   }, []);
 
   useEffect(() => {
-    fetchProducts();
-  }, [submit]);
+    if (submitAdd) {
+      fetchProducts();
+    }
+  }, [submitAdd]);
 
   return (
     <Container>
@@ -90,7 +98,7 @@ const PantryScreen = () => {
       <Row>
         <Col>
           <Table striped bordered hover size="sm">
-            <thead>
+            <thead className="bg-dark text-light">
               <tr>
                 <th>Name</th>
                 <th>Quantity</th>
@@ -104,10 +112,25 @@ const PantryScreen = () => {
                   <td>{product.name}</td>
                   <td>{product.countInStock}</td>
                   <td>{product.price}</td>
-                  <td>
-                    <Button onClick={() => handleShow(product._id)}>
+                  <td className="text-right">
+                    <Button
+                      className="mx-1"
+                      variant="warning"
+                      size="sm"
+                      onClick={() => handleShow(product._id)}
+                    >
                       <i className="fas fa-edit"></i>
                     </Button>
+                    {isAuth().role === "admin" ? (
+                      <Button
+                        className="mx-1"
+                        variant="danger"
+                        size="sm"
+                        onClick={() => handleShowRemove(product._id)}
+                      >
+                        <i className="fas fa-minus"></i>
+                      </Button>
+                    ) : null}
                   </td>
                 </tr>
               ))}

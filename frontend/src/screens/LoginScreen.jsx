@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Form, Button, Row, Col } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import FormContainer from "../components/FormContainer";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
@@ -58,6 +58,7 @@ const LoginScreen = ({ location, history }) => {
     <>
       <FormContainer>
         <ToastContainer />
+        {isAuth() ? <Redirect to="/" /> : null}
         <h1 className="text-center">Sign In</h1>
         <Form onSubmit={handleSubmit}>
           <Form.Group controlId="email">

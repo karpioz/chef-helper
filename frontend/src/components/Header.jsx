@@ -1,8 +1,10 @@
 import React from "react";
-import { Navbar, Nav, Container, Image } from "react-bootstrap";
+import { Navbar, Nav, Container, Image, NavDropdown } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
+import { isAuth, logout } from "../utilities/authUtilities";
+import { withRouter } from "react-router-dom";
 
-const Header = () => {
+const Header = ({ history }) => {
   return (
     <header>
       <Navbar bg="dark" variant="dark" expand="lg" collapseOnSelect>
@@ -43,19 +45,30 @@ const Header = () => {
                   <i className="fas fa-clipboard"></i> Pantry
                 </Nav.Link>
               </LinkContainer>
-              {/* {userInfo ? (
-								<NavDropdown title={userInfo.name} id='username'>
-									<LinkContainer to='/profile'>
-										<NavDropdown.Item>Profile</NavDropdown.Item>
-									</LinkContainer>
-									<NavDropdown.Item onClick={logoutHandler}>Logout</NavDropdown.Item>
-								</NavDropdown>
-							) : */}{" "}
-              <LinkContainer to="/login">
-                <Nav.Link>
-                  <i className="fas fa-user"></i> Login
-                </Nav.Link>
-              </LinkContainer>
+              {isAuth() ? (
+                <NavDropdown title={isAuth().name} id="username">
+                  <LinkContainer
+                    to={isAuth().role === "admin" ? "/admin" : "/profile"}
+                  >
+                    <NavDropdown.Item>Profile</NavDropdown.Item>
+                  </LinkContainer>
+                  <NavDropdown.Item
+                    onClick={() => {
+                      logout(() => {
+                        history.push("/");
+                      });
+                    }}
+                  >
+                    Logout
+                  </NavDropdown.Item>
+                </NavDropdown>
+              ) : (
+                <LinkContainer to="/login">
+                  <Nav.Link>
+                    <i className="fas fa-user"></i> Login
+                  </Nav.Link>
+                </LinkContainer>
+              )}
             </Nav>
           </Navbar.Collapse>
         </Container>
@@ -64,4 +77,4 @@ const Header = () => {
   );
 };
 
-export default Header;
+export default withRouter(Header);

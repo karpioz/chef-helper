@@ -7,6 +7,8 @@ import "./App.css";
 // layout components
 import Header from "./components/Header";
 import Footer from "./components/Footer";
+import ProtectedUserRoute from "./components/ProtectedUserRoute";
+import ProtectedAdminRoute from "./components/ProtectedAdminRoute";
 
 // screens
 import HomeScreen from "./screens/HomeScreen";
@@ -17,6 +19,8 @@ import RotaScreen from "./screens/RotaScreen";
 import PantryScreen from "./screens/PantryScreen";
 import TasksScreen from "./screens/TasksScreen";
 import ActivateAccountScreen from "./screens/ActivateAccountScreen";
+import ProfileScreen from "./screens/ProfileScreen";
+import AdminScreen from "./screens/AdminScreen";
 
 const App = () => {
   return (
@@ -36,6 +40,8 @@ const App = () => {
             component={ActivateAccountScreen}
             exact
           />
+          <ProtectedUserRoute path="/profile" exact component={ProfileScreen} />
+          <ProtectedAdminRoute path="/admin" exact component={AdminScreen} />
         </main>
       </Container>
       <Footer />
