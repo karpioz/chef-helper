@@ -1,19 +1,27 @@
 // This file contains all routes involved products and ingredients
 
-import express from 'express'
-const router = express.Router()
+import express from "express";
+const router = express.Router();
 
 // Importing controllers
 import {
-	getProducts,
-	updateProductQuantity
-} from '../controllers/productsController.js'
+  getProducts,
+  createProduct,
+  updateProductQuantity,
+  deleteProduct,
+} from "../controllers/productsController.js";
 
 // routes
 // read all products data
-router.get('/', getProducts)
+router.get("/", getProducts);
+
+// create new product
+router.post("/", createProduct);
 
 // update product data
-router.patch('/:id', updateProductQuantity)
+router.patch("/:id", updateProductQuantity);
 
-export default router
+// delete product from database
+router.delete("/:id", deleteProduct);
+
+export default router;

@@ -9,10 +9,10 @@ import axios from "axios";
 const RegisterScreen = ({ location, history }) => {
   // state with useState hook
   const [formData, setFormData] = useState({
-    name: "Pawel Karpinski",
-    email: "karpioz@example.com",
-    password: "admin123",
-    confirmPassword: "admin1234",
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
     buttonText: "Submit",
   });
   // destructuring state

@@ -21,17 +21,20 @@ const PantryScreen = () => {
   const [modalDataAdd, setModalDataAdd] = useState(0);
   const [modalDataSubt, setModalDataSubt] = useState(0);
   const [show, setShow] = useState(false);
+  const [showRemove, setShowRemove] = useState(false);
   const [submitAdd, setSubmitAdd] = useState(false);
+  const [submitRemove, setSubmitRemove] = useState(false);
   const handleClose = () => setShow(false);
+  const handleCloseRemove = () => setShowRemove(false);
   const handleShow = (id) => {
     console.log(id);
     setModalData(() => products.find((product) => product._id === id));
     setShow(true);
   };
-
   const handleShowRemove = (id) => {
     console.log(id);
-    setShow(true);
+    setModalData(() => products.find((product) => product._id === id));
+    setShowRemove(true);
   };
 
   const handleModalSubmit = (e) => {
@@ -49,6 +52,24 @@ const PantryScreen = () => {
 
     //closing modal
     handleClose();
+  };
+
+  const handleModalSubmitRemove = (e) => {
+    const { _id, name } = modalData;
+    e.preventDefault();
+    axios({
+      method: "DELETE",
+      url: `${process.env.REACT_APP_API}/products/${modalData._id}`,
+      data: { _id },
+    }).then((response) => {
+      console.log("item removed");
+      toast.success(`Item ${name} has been deleted`);
+      setProducts(products.filter((product) => product._id !== _id));
+      setSubmitRemove(true);
+    });
+
+    //closing modal
+    handleCloseRemove();
   };
 
   const handleAddQuantity = (e) => {
@@ -197,6 +218,36 @@ const PantryScreen = () => {
             </Button>
             <Button variant="success" type="submit">
               Update
+            </Button>
+          </Modal.Footer>
+        </Form>
+      </Modal>
+      {/* Remove Product Modal */}
+      <Modal show={showRemove} onHide={handleClose} animation={false}>
+        <Modal.Header closeButton>
+          <Modal.Title>Please Confirm</Modal.Title>
+        </Modal.Header>
+        <Form onSubmit={handleModalSubmitRemove}>
+          <Modal.Body>
+            <h3>
+              Remove of <span className="text-danger">{modalData.name}</span>
+            </h3>
+            <Form.Group>
+              <Form.Label>Available Quantity (grams)</Form.Label>
+              <Form.Control
+                type="number"
+                placeholder={modalData.countInStock}
+                name={modalData.countInStock}
+                readOnly
+              />
+            </Form.Group>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="warning" onClick={handleCloseRemove}>
+              Cancel
+            </Button>
+            <Button variant="danger" type="submit">
+              Remove
             </Button>
           </Modal.Footer>
         </Form>
