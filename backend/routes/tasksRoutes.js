@@ -1,27 +1,31 @@
 // This file contains all routes involved products and ingredients
 
-import express from "express";
-const router = express.Router();
+import express from 'express'
+const router = express.Router()
 
 // Importing controllers
 import {
-  getTasks,
-  createTask,
-  updateTask,
-  deleteTask,
-} from "../controllers/tasksController.js";
+	getTasks,
+	createTask,
+	updateTask,
+	updateTaskFinished,
+	deleteTask
+} from '../controllers/tasksController.js'
 
 // routes
-// read all products data
-router.get("/", getTasks);
+// read all tasks
+router.get('/', getTasks)
 
-// create new product
-router.post("/", createTask);
+// create new task
+router.post('/', createTask)
 
-// update product data
-router.patch("/:id", updateTask);
+// update task
+router.patch('/:id', updateTask)
 
-// delete product from database
-router.delete("/:id", deleteTask);
+// update finished tasks
+router.patch('/finished/:id', updateTaskFinished)
 
-export default router;
+// delete  finished task from database
+router.delete('/:id', deleteTask)
+
+export default router
