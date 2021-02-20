@@ -197,10 +197,28 @@ const authUser = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc fetch all users
+// @route GET /api/users
+// @access Public
+
+const getUserNames = asyncHandler(async (req, res) => {
+  try {
+    const users = await User.find({}, { _id: 1, name: 1 });
+    if (users) {
+      res.json(users);
+    } else {
+      res.status(500).json({
+        error: "Something went wrong",
+      });
+    }
+  } catch (error) {}
+});
+
 export {
   signupUser,
   signupUserWithSendGrid,
   accountActivation,
   loginUser,
   authUser,
+  getUserNames,
 };

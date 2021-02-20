@@ -10,6 +10,7 @@ import {
   loginUser,
   accountActivation,
   authUser,
+  getUserNames,
 } from "../controllers/authController.js";
 
 // importing validators
@@ -33,5 +34,8 @@ router.post("/login", userLoginValidator, authUser);
 
 // account email activation
 router.post("/activate", accountActivation);
+
+// get all users
+router.get("/users/names", getUserNames);
 
 export default router;

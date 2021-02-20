@@ -16,6 +16,7 @@ connectDB();
 import authRoutes from "./routes/authRoutes.js";
 import recipesRoutes from "./routes/recipesRoutes.js";
 import productsRoutes from "./routes/productsRoutes.js";
+import tasksRoutes from "./routes/tasksRoutes.js";
 
 const app = express();
 app.use(express.json());
@@ -34,6 +35,7 @@ if ((process.env.NODE_ENV = "development")) {
 app.use("/api", authRoutes);
 app.use("/api/recipes", recipesRoutes);
 app.use("/api/products", productsRoutes);
+app.use("/api/tasks", tasksRoutes);
 
 app.get("/", (req, res) => {
   res.send("API is running...");

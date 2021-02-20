@@ -54,12 +54,12 @@ const AdminScreen = () => {
       <Row>
         <ToastContainer />
         <Col>
-          <h1>Admin Dashboard</h1>
+          <h1 className="text-center my-3">Admin Dashboard</h1>
         </Col>
       </Row>
       <Row>
         <Col>
-          <h2>Add New Products</h2>
+          <h2>Pantry</h2>
           <Form onSubmit={handleProductSubmit}>
             <Form.Group controlId="Name">
               <Form.Label>Product Name</Form.Label>
