@@ -142,7 +142,7 @@ const PantryScreen = () => {
                     >
                       <i className="fas fa-edit"></i>
                     </Button>
-                    {isAuth().role === "admin" ? (
+                    {isAuth() && isAuth().role === "admin" ? (
                       <Button
                         className="mx-1"
                         variant="danger"
