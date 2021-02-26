@@ -78,13 +78,17 @@ const AdminScreen = () => {
   const handleTaskSubmit = (event) => {
     //
   };
-
   // fetching users on load
   const fetchUsers = async () => {
-    const { users } = await axios.get(
+    const response = await axios.get(
       `${process.env.REACT_APP_API}/users/names`
     );
-    setUsers(users);
+    console.log(response);
+    if (response) {
+      setUsers(response.data);
+    } else {
+      console.log("something went wrong when fetching users...");
+    }
   };
 
   useEffect(() => {
@@ -187,9 +191,11 @@ const AdminScreen = () => {
               <Form.Label>Assign Task to:</Form.Label>
               <Form.Control as="select">
                 <option>Select user</option>
-                {users ? (
+                {users.length !== 0 ? (
                   users.map((user) => (
-                    <option value={user._id}>{user.name}</option>
+                    <option key={user._id} value={user._id}>
+                      {user.name}
+                    </option>
                   ))
                 ) : (
                   <option className="bg-danger text-light">
