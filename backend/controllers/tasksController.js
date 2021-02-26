@@ -22,10 +22,10 @@ const getTasks = asyncHandler(async (req, res) => {
 // @route   POST /api/tasks
 // @access  Private/Admin
 const createTask = asyncHandler(async (req, res) => {
-	const { name, assignedTo, priority } = req.body
+	const { taskName, assignedTo, priority } = req.body
 
 	const newTask = new Task({
-		name,
+		taskName,
 		assignedTo,
 		priority
 	})

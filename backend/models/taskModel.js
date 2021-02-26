@@ -1,28 +1,28 @@
 // mongoDB Object Modelling
-import mongoose from "mongoose";
+import mongoose from 'mongoose'
 
 const tasksSchema = new mongoose.Schema(
-  {
-    name: {
-      type: String,
-      trim: true,
-      required: true,
-    },
-    assignedTo: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-    },
-    priority: {
-      type: String,
-    },
-    completed: {
-      type: Boolean,
-      default: false,
-    },
-  },
-  { timestamps: true }
-);
+	{
+		taskName: {
+			type: String,
+			trim: true,
+			required: true
+		},
+		assignedTo: {
+			type: mongoose.Schema.Types.ObjectId,
+			ref: 'User'
+		},
+		priority: {
+			type: String
+		},
+		completed: {
+			type: Boolean,
+			default: false
+		}
+	},
+	{ timestamps: true }
+)
 
-const Task = mongoose.model("Task", tasksSchema);
+const Task = mongoose.model('Task', tasksSchema)
 
-export default Task;
+export default Task
