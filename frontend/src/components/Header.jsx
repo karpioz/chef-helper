@@ -25,14 +25,14 @@ const Header = ({ history }) => {
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="ml-auto">
-              <LinkContainer to="/recipes">
-                <Nav.Link>
-                  <i className="fas fa-utensils"></i> Recipes
-                </Nav.Link>
-              </LinkContainer>
               <LinkContainer to="/tasks">
                 <Nav.Link>
                   <i className="fas fa-clipboard-list"></i> Tasks
+                </Nav.Link>
+              </LinkContainer>
+              <LinkContainer to="/pantry">
+                <Nav.Link>
+                  <i className="fas fa-clipboard"></i> Pantry
                 </Nav.Link>
               </LinkContainer>
               <LinkContainer to="/rota">
@@ -40,9 +40,10 @@ const Header = ({ history }) => {
                   <i className="far fa-calendar-alt"></i> Rota
                 </Nav.Link>
               </LinkContainer>
-              <LinkContainer to="/pantry">
+
+              <LinkContainer to="/recipes">
                 <Nav.Link>
-                  <i className="fas fa-clipboard"></i> Pantry
+                  <i className="fas fa-utensils"></i> Recipes
                 </Nav.Link>
               </LinkContainer>
               {isAuth() ? (
