@@ -1,27 +1,65 @@
 import asyncHandler from "express-async-handler";
 import Recipe from "../models/recipeModel.js";
-import Product from "../models/productModel.js";
 
 // @desc fetch all recipes
 // @route GET /api/recipes
 // @access Public
 
 const getRecipes = asyncHandler(async (req, res) => {
-  const recipes = await Recipe.aggregate([
-    {
-      $lookup: {
-        from: "products",
-        localField: "productName",
-        foreignField: "name",
-        as: "output",
-      },
-    },
-  ]);
+  const recipes = await Recipe.find({});
   res.json(recipes);
 });
 
-const readRecipeData = () => {
-  //
-};
+// @desc fetch single recipe
+// @route GET /api/recipes/:id
+// @access Public
+const getRecipeById = asyncHandler(async (req, res) => {
+  const recipe = await Recipe.findById(req.params.id).populate("productId", {
+    name: 1,
+  });
 
-export { getRecipes, readRecipeData };
+  if (recipe) {
+    res.json(recipe);
+  } else {
+    res.status(404);
+    throw new Error("recipe not found");
+  }
+});
+
+// @desc    Create a recipe
+// @route   POST /api/recipes
+// @access  Private/Admin
+const createRecipe = asyncHandler(async (req, res) => {
+  const {
+    label,
+    image,
+    healthLabels,
+    ingredientLines,
+    ingredients,
+    totalTime,
+    calories,
+  } = req.body;
+
+  const newRecipe = new Recipe({
+    label,
+    image,
+    healthLabels,
+    ingredientLines,
+    ingredients,
+    calories,
+    totalTime,
+  });
+
+  if (!newRecipe) {
+    return res.status(400).json({
+      error: "Something went wrong",
+    });
+  }
+
+  await newRecipe.save();
+  return res.status(201).json({
+    message: "New Recipe has been created",
+  });
+});
+
+export { getRecipes, getRecipeById, createRecipe };
