@@ -13,40 +13,41 @@ import mongoose from "mongoose";
   weight: Number,
 }); */
 
-const recipeSchema = new mongoose.Schema({
-  label: {
-    type: "String",
-  },
-  image: {
-    type: "String",
-  },
-  healthLabels: {
-    type: "Array",
-  },
-  ingredientLines: {
-    type: ["String"],
-  },
-  ingredients: [
-    {
-      _id: false,
-      productId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Product",
-      },
-      text: String,
-      weight: Number,
+const recipeSchema = new mongoose.Schema(
+  {
+    label: {
+      type: "String",
     },
-  ],
-  calories: {
-    type: "Number",
+    image: {
+      type: "String",
+    },
+    healthLabels: {
+      type: "Array",
+    },
+    ingredientLines: {
+      type: ["String"],
+    },
+    ingredients: [
+      {
+        _id: false,
+        productId: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Product",
+        },
+      },
+    ],
+    calories: {
+      type: "Number",
+    },
+    totalTime: {
+      type: "Number",
+    },
+    bookmarked: {
+      type: "Boolean",
+    },
   },
-  totalTime: {
-    type: "Number",
-  },
-  bookmarked: {
-    type: "Boolean",
-  },
-});
+  { timestamps: true }
+);
 
 const Recipe = mongoose.model("Recipe", recipeSchema);
 

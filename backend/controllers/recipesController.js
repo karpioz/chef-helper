@@ -6,7 +6,7 @@ import Recipe from "../models/recipeModel.js";
 // @access Public
 
 const getRecipes = asyncHandler(async (req, res) => {
-  const recipes = await Recipe.find({});
+  const recipes = await Recipe.find({}).populate("productId", { name: 1 });
   res.json(recipes);
 });
 
@@ -16,6 +16,7 @@ const getRecipes = asyncHandler(async (req, res) => {
 const getRecipeById = asyncHandler(async (req, res) => {
   const recipe = await Recipe.findById(req.params.id).populate("productId", {
     name: 1,
+    countInStock: 1,
   });
 
   if (recipe) {
