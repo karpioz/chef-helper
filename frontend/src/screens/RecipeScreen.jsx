@@ -1,68 +1,38 @@
-import React, { useState, useEffect } from 'react'
-import { useParams } from 'react-router-dom'
-import axios from 'axios'
-import {
-	Row,
-	Col,
-	Button,
-	Container,
-	Image,
-	ListGroup,
-	Badge
-} from 'react-bootstrap'
-import { LinkContainer } from 'react-router-bootstrap'
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import axios from "axios";
+import { Spinner } from "react-bootstrap";
+import SingleRecipeComponent from "../components/SingleRecipeComponent";
 
 const RecipeScreen = () => {
-	const [recipe, setRecipe] = useState([])
-	const { id } = useParams()
+  const [recipe, setRecipe] = useState({});
+  const [isFetching, setIsFetching] = useState(true);
+  const { id } = useParams();
 
-	useEffect(() => {
-		// fetching single recipe with id from url
-		const fetchRecipe = async () => {
-			const { data } = await axios.get(
-				`${process.env.REACT_APP_API}/recipes/${id}`
-			)
-			setRecipe(data)
-		}
+  useEffect(() => {
+    // fetching single recipe with id from url
+    const fetchRecipe = async () => {
+      const { data } = await axios.get(
+        `${process.env.REACT_APP_API}/recipes/${id}`
+      );
+      setRecipe(data);
+      setIsFetching(false);
+    };
 
-		fetchRecipe()
-	}, [])
+    fetchRecipe();
+  }, []);
 
-	return (
-		<Container className='my-3'>
-			<Row>
-				<Col md={4}>
-					<Image src={recipe.image} alt={recipe.label} fluid />
-					{recipe.healthLabels.map((label, i) => (
-						<Badge key={i} variant='success' className='m-1'>
-							{label}
-						</Badge>
-					))}
-				</Col>
-				<Col md={4}>
-					<ListGroup flush='true'>
-						<ListGroup.Item>
-							<h3>{recipe.label}</h3>
-						</ListGroup.Item>
-					</ListGroup>
-				</Col>
-				<Col md={4}>
-					<ListGroup>
-						<ListGroup.Item>
-							<h3>Pantry</h3>
-						</ListGroup.Item>
-					</ListGroup>
-				</Col>
-			</Row>
-			<Row className='my-3'>
-				<Col>
-					<LinkContainer to={'/recipes'}>
-						<Button variant='danger'>Back</Button>
-					</LinkContainer>
-				</Col>
-			</Row>
-		</Container>
-	)
-}
+  return (
+    <>
+      {isFetching ? (
+        <Spinner animation="border" role="status">
+          <span className="sr-only">Loading...</span>
+        </Spinner>
+      ) : (
+        <SingleRecipeComponent recipe={recipe} />
+      )}
+    </>
+  );
+};
 
-export default RecipeScreen
+export default RecipeScreen;
