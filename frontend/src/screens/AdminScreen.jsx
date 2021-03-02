@@ -3,6 +3,7 @@ import { Row, Col, Form, Button } from "react-bootstrap";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
+import RecipeCreatorComponent from "../components/RecipeCreatorComponent";
 
 const AdminScreen = () => {
   // state with useState hook
@@ -18,6 +19,14 @@ const AdminScreen = () => {
     countInStock: "",
     price: "",
     defaultWeightInGrams: "",
+  });
+  const [recipeCreatorData, setRecipeCreatorData] = useState({
+    label: "",
+    healthLabels: [],
+  });
+  const [recipeCreatorDataPrepared, setRecipeCreatorDataPrepared] = useState({
+    label: "smth",
+    healthLabels: [""],
   });
   // destructuring state
   const { name, countInStock, price, defaultWeightInGrams } = productsFormData;
@@ -116,13 +125,43 @@ const AdminScreen = () => {
         toast.error(error.response.data.error);
       });
   };
+  // converting inputs to array
+  const changeToArray = () => {
+    let healthLabelsArr = [];
+
+    if (recipeCreatorData) {
+      healthLabelsArr = [...recipeCreatorData.healthLabels];
+    }
+
+    setRecipeCreatorData({
+      ...recipeCreatorData,
+      healthLabels: healthLabelsArr,
+    });
+
+    console.log("data should be modified:" + recipeCreatorData.healthLabels);
+  };
+
+  // handling recipe creator
+  const handleRecipeSubmit = (e) => {
+    e.preventDefault();
+    changeToArray();
+    console.log("Recipe submitted");
+  };
+
+  const handleRecipeCreatorInputChange = (name) => (event) => {
+    // getting existing state and update the key with same name as function argument
+    setRecipeCreatorData({
+      ...recipeCreatorData,
+      [name]: event.target.value,
+    });
+  };
 
   // fetching users on load
   const fetchUsers = async () => {
     const response = await axios.get(
       `${process.env.REACT_APP_API}/users/names`
     );
-    console.log(response);
+    //console.log(response);
     if (response) {
       setUsers(response.data);
     } else {
@@ -133,8 +172,6 @@ const AdminScreen = () => {
   useEffect(() => {
     fetchUsers();
   }, []);
-
-  console.log(taskFormData);
 
   return (
     <>
@@ -247,6 +284,16 @@ const AdminScreen = () => {
               Add Task
             </Button>
           </Form>
+        </Col>
+      </Row>
+      <Row className="my-3">
+        <Col>
+          <h2>Recipe Creator</h2>
+          <RecipeCreatorComponent
+            handleRecipeSubmit={handleRecipeSubmit}
+            handleRecipeCreatorInputChange={handleRecipeCreatorInputChange}
+            recipeCreatorData={recipeCreatorData}
+          />
         </Col>
       </Row>
     </>
