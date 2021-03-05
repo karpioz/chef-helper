@@ -35,9 +35,9 @@ const createRecipe = asyncHandler(async (req, res) => {
 		image,
 		healthLabels,
 		ingredientLines,
-		ingredients,
-		totalTime,
-		calories
+		ingredients
+		//totalTime,
+		//	calories
 	} = req.body
 
 	const newRecipe = new Recipe({
@@ -46,8 +46,8 @@ const createRecipe = asyncHandler(async (req, res) => {
 		healthLabels,
 		ingredientLines,
 		ingredients,
-		calories,
-		totalTime
+		calories: 1000,
+		totalTime: 120
 	})
 
 	if (!newRecipe) {

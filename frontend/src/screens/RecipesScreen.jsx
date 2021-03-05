@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Row, Col } from 'react-bootstrap'
+import { Row, Col, CardDeck } from 'react-bootstrap'
 import axios from 'axios'
 import RecipeComponent from '../components/RecipeComponent'
 
@@ -23,11 +23,11 @@ const RecipesScreen = () => {
 				</Col>
 			</Row>
 			<Row>
-				<Col>
+				<CardDeck>
 					{recipes.map(recipe => (
-						<RecipeComponent recipe={recipe} />
+						<RecipeComponent recipe={recipe} key={recipe._id} />
 					))}
-				</Col>
+				</CardDeck>
 			</Row>
 		</>
 	)
