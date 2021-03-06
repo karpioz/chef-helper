@@ -38,6 +38,8 @@ const AdminScreen = () => {
     weight: "",
   });
 
+  const [uploading, setUploading] = useState(false);
+
   // destructuring state
   const { name, countInStock, price, defaultWeightInGrams } = productsFormData;
   const { taskName, assignedTo, priority } = taskFormData;
@@ -192,48 +194,7 @@ const AdminScreen = () => {
     }
   };
 
-  // creating ingredient object to store in the recipe's array of ingredients
-  const handleIngredientsLines = (event) => {
-    // converting string from input to Number
-    /* let weightInput;
-    let textInput = event.target.value;
-    if (event.target.name === "weight") {
-      weightInput = Number(event.target.value);
-    } */
-
-    switch (event.target.name) {
-      case "text":
-        setRecipeLines((prevState) => ({
-          ...prevState,
-          text: event.target.value,
-        }));
-        break;
-      case "weight":
-        setRecipeLines((prevState) => ({
-          ...prevState,
-          weight: Number(event.target.value),
-        }));
-        break;
-      default:
-        setRecipeLines((prevState) => ({
-          ...prevState,
-          productId: event.target.value,
-        }));
-    }
-
-    // storing text and weight in recipeLines state
-    /* setRecipeLines({
-      ...recipeLines,
-      text: textInput,
-      weight: weightInput,
-    }); */
-
-    console.log(recipeLines);
-  };
-
-  // ------ TESTING ------
-
-  const handleIngredientLinesTwo = (name) => (event) => {
+  const handleIngredientLines = (name) => (event) => {
     console.log(event.target.value);
     // getting existing state and update the key with same name as function argument
     setRecipeLines((recipeLines) => ({
@@ -250,6 +211,35 @@ const AdminScreen = () => {
       productId: event.target.value,
     }));
   };
+
+  // uploading image file
+  const uploadFileHandler = async (event) => {
+    const file = event.target.files[0];
+    const formData = new FormData();
+    formData.append("image", file);
+    setUploading(true);
+
+    try {
+      const config = {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      };
+
+      const { data } = await axios.post(
+        `${process.env.REACT_APP_API}/upload`,
+        formData,
+        config
+      );
+      setRecipeCreatorData({ ...recipeCreatorData, image: data });
+      setUploading(false);
+    } catch (error) {
+      console.error(error);
+      setUploading(false);
+    }
+  };
+
+  // realtime recipe creator inputs feedback
 
   useEffect(() => {
     console.log(recipeLines);
@@ -440,13 +430,14 @@ const AdminScreen = () => {
               handleRecipeSubmit={handleRecipeSubmit}
               handleRecipeCreatorInputChange={handleRecipeCreatorInputChange}
               recipeCreatorData={recipeCreatorData}
-              handleIngredientsLines={handleIngredientsLines}
-              handleIngredientLinesTwo={handleIngredientLinesTwo}
+              handleIngredientLines={handleIngredientLines}
               products={products}
               handleChangeProduct={handleChangeProduct}
               handleAddIngredient={handleAddIngredient}
               recipeLines={recipeLines}
               setRecipeLines={setRecipeLines}
+              uploading={uploading}
+              uploadFileHandler={uploadFileHandler}
             />
           )}
         </Col>

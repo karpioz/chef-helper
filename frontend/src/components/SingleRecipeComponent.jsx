@@ -11,11 +11,22 @@ import {
 import { LinkContainer } from "react-router-bootstrap";
 
 function SingleRecipeComponent({ recipe }) {
+  const getImageURL = (path) => {
+    let url;
+    if (path.startsWith("uploads/")) {
+      url = `http://localhost:8000/${path}`;
+    } else {
+      url = `${path}`;
+    }
+
+    return url;
+  };
+
   return (
     <Container className="my-3">
       <Row>
         <Col md={4}>
-          <Image src={recipe.image} alt={recipe.label} fluid />
+          <Image src={getImageURL(recipe.image)} alt={recipe.label} fluid />
           {recipe.healthLabels.map((label, i) => (
             <Badge key={i} variant="success" className="m-1">
               {label}

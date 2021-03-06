@@ -29,7 +29,7 @@ app.use(express.json());
 // morgan - HTTP request logger
 app.use(morgan("dev"));
 // cors allow request from all origins
-if ((process.env.NODE_ENV = "development")) {
+if (process.env.NODE_ENV == "development") {
   app.use(cors({ origin: "http://localhost:3000" }));
 }
 
@@ -41,9 +41,8 @@ app.use("/api/tasks", tasksRoutes);
 app.use("/api/upload", uploadRoutes);
 
 // making uploads folder accessible for browser
-const __dirname = path.resolve();
-
-app.use("/uploads", express.static(path.join(__dirname, "/uploads")));
+const folder = path.resolve();
+app.use("/uploads", express.static(path.join(folder, "/uploads")));
 
 app.get("/", (req, res) => {
   res.send("API is running...");

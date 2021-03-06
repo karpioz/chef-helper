@@ -1,17 +1,17 @@
 import React from "react";
-import { Form, Button, Col, FormGroup } from "react-bootstrap";
+import { Form, Button, Col, Spinner } from "react-bootstrap";
 
 const RecipeCreatorComponent = ({
   handleRecipeSubmit,
   handleRecipeCreatorInputChange,
   recipeCreatorData,
-  handleIngredientsLines,
-  handleIngredientLinesTwo,
+  handleIngredientLines,
   handleChangeProduct,
   products,
   handleAddIngredient,
   recipeLines,
-  setRecipeLines,
+  uploadFileHandler,
+  uploading,
 }) => {
   const { label, healthLabels, image } = recipeCreatorData;
   const { text, weight } = recipeLines;
@@ -42,7 +42,7 @@ const RecipeCreatorComponent = ({
       </Form.Row>
       <Form.Row>
         <Form.Group as={Col} controlId="image">
-          <Form.Label>Image Link</Form.Label>
+          <Form.Label>Paste Image URL</Form.Label>
           <Form.Control
             type="text"
             placeholder="Please paste url for image file"
@@ -52,12 +52,15 @@ const RecipeCreatorComponent = ({
           ></Form.Control>
         </Form.Group>
         <Form.Group as={Col} controlId="photo">
-          <Form.Label>Photo Upload</Form.Label>
-          <Form.Control
-            type="file"
-            onChange={handleRecipeCreatorInputChange("image")}
+          <Form.Label>Image Upload</Form.Label>
+          <Form.File
+            id="image-file"
+            label="Choose File"
+            custom
+            onChange={uploadFileHandler}
             name="image"
-          ></Form.Control>
+          ></Form.File>
+          {uploading && <Spinner />}
         </Form.Group>
       </Form.Row>
       <Form.Row className="bg-light align-items-center">
@@ -67,7 +70,7 @@ const RecipeCreatorComponent = ({
             type="text"
             value={text}
             placeholder="Enter recipe text line"
-            onChange={handleIngredientLinesTwo("text")}
+            onChange={handleIngredientLines("text")}
             name="text"
           ></Form.Control>
         </Form.Group>
@@ -94,7 +97,7 @@ const RecipeCreatorComponent = ({
             type="number"
             name="weight"
             placeholder="required weight"
-            onChange={handleIngredientLinesTwo("weight")}
+            onChange={handleIngredientLines("weight")}
             value={weight}
           ></Form.Control>
         </Form.Group>

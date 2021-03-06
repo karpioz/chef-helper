@@ -25,7 +25,7 @@ const RecipesScreen = () => {
       <Row>
         <CardDeck>
           {recipes.map((recipe) => (
-            <Col md={4} key={recipe._id}>
+            <Col key={recipe._id} sm={12} md={6} lg={4} xl={3}>
               <RecipeComponent recipe={recipe} />
             </Col>
           ))}
