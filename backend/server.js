@@ -1,3 +1,4 @@
+import path from "path";
 import express from "express";
 import dotenv from "dotenv";
 import colors from "colors";
@@ -17,6 +18,7 @@ import authRoutes from "./routes/authRoutes.js";
 import recipesRoutes from "./routes/recipesRoutes.js";
 import productsRoutes from "./routes/productsRoutes.js";
 import tasksRoutes from "./routes/tasksRoutes.js";
+import uploadRoutes from "./routes/uploadRoutes.js";
 
 const app = express();
 app.use(express.json());
@@ -36,6 +38,12 @@ app.use("/api", authRoutes);
 app.use("/api/recipes", recipesRoutes);
 app.use("/api/products", productsRoutes);
 app.use("/api/tasks", tasksRoutes);
+app.use("/api/upload", uploadRoutes);
+
+// making uploads folder accessible for browser
+const __dirname = path.resolve();
+
+app.use("/uploads", express.static(path.join(__dirname, "/uploads")));
 
 app.get("/", (req, res) => {
   res.send("API is running...");
