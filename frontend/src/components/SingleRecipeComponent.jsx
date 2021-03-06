@@ -46,18 +46,20 @@ function SingleRecipeComponent({ recipe }) {
                 variant="info"
                 className="d-flex justify-content-between"
               >
-                <span>
-                  <strong>product: </strong>
-                  <p>{ing.productId.name}</p>
-                </span>
-                <span>
-                  <strong>required: </strong>
-                  <p>{ing.weight} (g)</p>
-                </span>
-                <span>
-                  <strong>pantry: </strong>
-                  <p>{ing.productId.countInStock}(g)</p>
-                </span>
+                <>
+                  <span>
+                    <strong>product: </strong>
+                    <p>{ing.productId.name}</p>
+                  </span>
+                  <span>
+                    <strong>required: </strong>
+                    <p>{ing.weight} (g)</p>
+                  </span>
+                  <span>
+                    <strong>pantry: </strong>
+                    <p>{ing.productId.countInStock}(g)</p>
+                  </span>
+                </>
               </ListGroup.Item>
             ))}
           </ListGroup>
