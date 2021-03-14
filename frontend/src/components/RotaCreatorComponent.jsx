@@ -11,20 +11,8 @@ const RotaCreatorComponent = () => {
     { name: "", start: "", finish: "" },
   ]);
   const [isFetchingUsers, setIsFetchingUsers] = useState(true);
-  const [rota, setRota] = useState([
-    {
-      day: "",
-      date: "",
-      employees: [
-        {
-          name: "",
-          start: "",
-          finish: "",
-          isOff: false,
-        },
-      ],
-    },
-  ]);
+  const [week, setWeek] = useState([]);
+  const [rota, setRota] = useState([]);
 
   // fetching users on load
   const fetchUsers = async () => {
@@ -56,29 +44,17 @@ const RotaCreatorComponent = () => {
       "Sunday",
     ];
 
-    let newRota = [
-      {
-        day: "",
-        date: "",
-        employees: [
-          {
-            name: "",
-            start: "",
-            finish: "",
-            isOff: false,
-          },
-        ],
-      },
-    ];
+    let newWeek = [];
 
     for (let i = 0; i <= 6; i++) {
-      newRota[i].day = weekDays[i];
-      newRota[i].date = moment(weekStartingDate).add(i, "days").format("LLLL");
-      //newRota.push(day);
-      setRota([...newRota]);
+      let day = {};
+      day.day = weekDays[i];
+      day.date = moment(weekStartingDate).add(i, "days").format("LLLL");
+      newWeek.push(day);
+      console.log(newWeek);
     }
 
-    console.log(rota);
+    setWeek(newWeek);
   };
 
   const handleRotaInputs = (name) => (e) => {
@@ -86,17 +62,13 @@ const RotaCreatorComponent = () => {
   };
 
   const handleAddEmployee = (index) => {
-    let currentEmployees = rota[index][2];
-    /* let newEmployee = [...employeesArr]
-		currentEmployees.push(newEmployee)
-		setRota({ ...rota[index], employees: currentEmployees }) */
-    console.log(currentEmployees);
+    //
   };
 
   useEffect(() => {
-    console.log("rota state: " + rota);
-    console.log("employeesArr state: " + employeesArr);
-  }, [rota, employeesArr]);
+    console.log("week state: " + week);
+    console.table("employeesArr state: " + employeesArr);
+  }, [week, employeesArr]);
 
   return (
     <Form>
@@ -108,7 +80,7 @@ const RotaCreatorComponent = () => {
         ></Form.Control>
       </Form.Group>
       <Form.Row>
-        {rota.length !== 0 ? (
+        {week.length !== 0 ? (
           <>
             <Form.Group as={Col}>
               <Form.Label>Select Day:</Form.Label>
@@ -117,8 +89,8 @@ const RotaCreatorComponent = () => {
                 onChange={(e) => console.log(e.target.value)}
               >
                 <option>Select Day</option>
-                {rota.length !== 0 ? (
-                  rota.map((day) => (
+                {week.length !== 0 ? (
+                  week.map((day) => (
                     <option key={day.day} value={day.date}>
                       {day.day}
                     </option>
