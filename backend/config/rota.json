@@ -1,0 +1,38 @@
+[{
+    "dayId": 1,
+    "day": "Monday",
+    "date": "08-03-2021",
+    "employees": [{
+        "employeeId": "6001cf9c155119674084f17d",
+        "start": "08:00",
+        "finish": "18:00"
+    }, {
+       "employeeId": "60059bacb2549c055145b5f9",
+        "start": "12:00",
+        "finish": "22:00" 
+    },
+    {
+       "employeeId": "6030429b8cbcc34958c834a7",
+        "start": "10:00",
+        "finish": "20:00" 
+    }]
+  },
+{
+"dayId": 2,
+"day": "Tuesday",
+"date": "09-03-2021",
+"employees": [{
+  "employeeId": "6001cf9c155119674084f17d",
+  "start": "12:00",
+  "finish": "22:00"
+}, {
+ "employeeId": "60059bacb2549c055145b5f9",
+  "start": "10:00",
+  "finish": "20:00" 
+},
+{
+ "employeeId": "6030429b8cbcc34958c834a7",
+  "start": "08:00",
+  "finish": "18:00" 
+}]
+}]  

@@ -15,6 +15,7 @@ connectDB();
 
 // importing routes
 import authRoutes from "./routes/authRoutes.js";
+import rotaRoutes from "./routes/rotaRoutes.js";
 import recipesRoutes from "./routes/recipesRoutes.js";
 import productsRoutes from "./routes/productsRoutes.js";
 import tasksRoutes from "./routes/tasksRoutes.js";
@@ -36,6 +37,7 @@ if (process.env.NODE_ENV == "development") {
 // middleware
 app.use("/api", authRoutes);
 app.use("/api/recipes", recipesRoutes);
+app.use("/api/rota", rotaRoutes);
 app.use("/api/products", productsRoutes);
 app.use("/api/tasks", tasksRoutes);
 app.use("/api/upload", uploadRoutes);
