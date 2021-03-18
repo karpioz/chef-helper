@@ -1,6 +1,6 @@
 import React from "react";
 import { Row, Col } from "react-bootstrap";
-import RotaCreatorComponent from "../components/RotaCreatorComponent";
+import RotaCreatorComponent from "../components/RotaCreatorComponentTwo";
 
 const RotaScreen = () => {
   return (

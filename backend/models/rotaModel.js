@@ -1,36 +1,43 @@
 // mongoDB Object Modelling
 import mongoose from "mongoose";
 
-const rotaSchema = new mongoose.Schema({
-  dayId: {
-    type: Number,
-  },
-  day: {
-    type: String,
-  },
-  date: {
-    type: String,
-  },
+const rotaSchema = new mongoose.Schema(
+  {
+    weeklyRota: [
+      {
+        dayId: {
+          type: Number,
+        },
+        day: {
+          type: String,
+        },
+        date: {
+          type: String,
+        },
 
-  employees: [
-    {
-      employeeId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
+        employees: [
+          {
+            employeeId: {
+              type: mongoose.Schema.Types.ObjectId,
+              ref: "User",
+            },
+            start: {
+              type: String,
+            },
+            finish: {
+              type: String,
+            },
+            isOff: {
+              type: Boolean,
+              default: false,
+            },
+          },
+        ],
       },
-      start: {
-        type: String,
-      },
-      finish: {
-        type: String,
-      },
-      isOff: {
-        type: Boolean,
-        default: false,
-      },
-    },
-  ],
-});
+    ],
+  },
+  { timestamps: true }
+);
 
 const Rota = mongoose.model("Rota", rotaSchema);
 

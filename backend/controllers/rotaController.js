@@ -14,9 +14,10 @@ const getRota = asyncHandler(async (req, res) => {
 // @route   POST /api/rota
 // @access  Private/Admin
 const createRota = asyncHandler(async (req, res) => {
-  const { dayId, day, date, employees } = req.body;
+  const { weeklyRota, dayId, day, date, employees } = req.body;
 
   const newRota = new Rota({
+    weeklyRota,
     dayId,
     day,
     date,

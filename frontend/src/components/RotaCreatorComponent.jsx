@@ -7,13 +7,13 @@ moment.locale('en-gb')
 
 const RotaCreatorComponent = () => {
 	const [users, setUsers] = useState([])
-	const [employeesArr, setEmployeesArr] = useState([
-		{ name: 'Select', start: '08:00', finish: '16:00' }
-	])
+	const [employeesArr, setEmployeesArr] = useState([])
 	const [isFetchingUsers, setIsFetchingUsers] = useState(true)
-	const [week, setWeek] = useState([])
-	const [day, setDay] = useState('')
-	const [rota, setRota] = useState([])
+	const [week, setWeek] = useState([
+		{ dayId: '', day: '', name: '', employees: [] }
+	])
+	const [selectedDay, setSelectedDay] = useState('')
+	const [weeklyRota, setWeeklyRota] = useState([])
 
 	// fetching users on load
 	const fetchUsers = async () => {
@@ -47,8 +47,10 @@ const RotaCreatorComponent = () => {
 
 		for (let i = 0; i <= 6; i++) {
 			let day = {}
+			day.dayId = i
 			day.day = weekDays[i]
 			day.date = moment(weekStartingDate).add(i, 'days').format('LLLL')
+			day.employees = []
 			newWeek.push(day)
 			console.log(newWeek)
 		}
@@ -65,14 +67,17 @@ const RotaCreatorComponent = () => {
 		//
 		console.log(employeesArr)
 		console.log(week)
-		console.log(day)
-		setRota()
+		console.log(selectedDay)
+		const editedDay = week.filter(day => day.date === selectedDay)
+		//editedDay.employees = [{ ...employeesArr }]
+		console.log(editedDay['employees'])
 	}
 
 	useEffect(() => {
 		console.log('week state: ' + week)
 		console.table('employeesArr state: ' + employeesArr)
-	}, [week, employeesArr])
+		console.table('weekly rota: ' + weeklyRota)
+	}, [week, employeesArr, weeklyRota])
 
 	return (
 		<Form>
@@ -88,11 +93,14 @@ const RotaCreatorComponent = () => {
 					<>
 						<Form.Group as={Col}>
 							<Form.Label>Select Day:</Form.Label>
-							<Form.Control as='select' onChange={e => setDay(e.target.value)}>
+							<Form.Control
+								as='select'
+								onChange={e => setSelectedDay(e.target.value)}
+							>
 								<option>Select Day</option>
 								{week.length !== 0 ? (
 									week.map(day => (
-										<option key={day.day} value={day.date}>
+										<option key={day.dayId} value={day.date}>
 											{day.day}
 										</option>
 									))
@@ -146,6 +154,7 @@ const RotaCreatorComponent = () => {
 					<p className='text-danger'>Please set week begining</p>
 				)}
 			</Form.Row>
+			{JSON.stringify(weeklyRota)}
 		</Form>
 	)
 }
