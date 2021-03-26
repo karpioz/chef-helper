@@ -18,6 +18,7 @@ const createRota = asyncHandler(async (req, res) => {
 
   const newRota = new Rota({
     weeklyRota,
+    weekStart: weeklyRota[0].date,
     dayId,
     day,
     date,

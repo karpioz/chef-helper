@@ -35,6 +35,9 @@ const rotaSchema = new mongoose.Schema(
         ],
       },
     ],
+    weekStart: {
+      type: String,
+    },
   },
   { timestamps: true }
 );

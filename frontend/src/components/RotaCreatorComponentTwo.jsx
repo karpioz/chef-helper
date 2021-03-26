@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { Form, Col, Button } from "react-bootstrap";
+import { Form, Button, Col } from "react-bootstrap";
 import moment from "moment";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.min.css";
 
 moment.locale("en-gb");
 
@@ -10,8 +12,13 @@ const RotaCreatorComponent = () => {
   const [employeesArr, setEmployeesArr] = useState([]);
   const [isFetchingUsers, setIsFetchingUsers] = useState(true);
   const [week, setWeek] = useState([
-    { dayId: "", day: "", name: "", employees: [] },
+    { dayId: "", day: "", date: "", employees: [] },
   ]);
+  const [newWeeklyRota, setNewWeeklyRota] = useState([
+    { weeklyRota: [{ dayId: "", day: "", date: "", employees: [] }] },
+  ]);
+
+  const { weeklyRota, dayId, day, date, employees } = newWeeklyRota;
 
   // fetching users on load
   const fetchUsers = async () => {
@@ -30,6 +37,29 @@ const RotaCreatorComponent = () => {
   useEffect(() => {
     fetchUsers();
   }, []);
+
+  useEffect(() => {
+    console.log(JSON.stringify(newWeeklyRota));
+    // axios to connect with backend
+    const length = Object.keys(newWeeklyRota.weeklyRota).length;
+    console.log(length);
+    if (length > 1) {
+      axios({
+        method: "POST",
+        url: `${process.env.REACT_APP_API}/rota`,
+        data: { weeklyRota, dayId, day, date, employees },
+      })
+        .then((response) => {
+          handleResetWeek();
+          toast.success(response.data.message);
+        })
+        .catch((error) => {
+          console.log("ROTA CREATE ERROR", error.response.data);
+          setWeek({ ...week });
+          toast.error(error.response.data.error);
+        });
+    }
+  }, [newWeeklyRota]);
 
   const handleWeekEndingDate = (e) => {
     let weekStartingDate = e.target.value;
@@ -58,58 +88,103 @@ const RotaCreatorComponent = () => {
     setWeek(newWeek);
   };
 
+  const handleResetWeek = () => {
+    setWeek([{ dayId: "", day: "", date: "", employees: [] }]);
+  };
+
   const handleChangeEmployees = (e, index, idx) => {
     const { name, value } = e.target;
     const employeesArr = [...week];
 
-    console.log(index);
-
     employeesArr[index].employees[idx][name] = value;
     setWeek(employeesArr);
   };
-  const handleAddEmployee = (index) => {
-    
-    const employeesArr = [...week];
-    employeesArr[index].employees.push({ nameId: "", start: "", finish: "" })
-    setWeek(employeesArr);
 
+  // adding new employee input to the specific day
+  const handleAddEmployee = (index) => {
+    const employeesArr = [...week];
+    employeesArr[index].employees.push({ nameId: "", start: "", finish: "" });
+    setWeek(employeesArr);
+  };
+
+  // removing employee input from the specific day
+  const handleRemoveEmployee = (index, empIndex) => {
+    const employeesArr = [...week];
+    employeesArr[index].employees.splice(empIndex, 1);
+    setWeek(employeesArr);
+  };
+
+  // saving the rota
+  const handleRotaSubmit = (e) => {
+    e.preventDefault();
+    let newRota = { weeklyRota: [] };
+    newRota.weeklyRota = [...week];
+    setNewWeeklyRota(newRota);
+    console.log("weekly rota saved");
   };
 
   return (
-    <Form>
-      <Form.Group>
-        <Form.Label>Select week starting Monday</Form.Label>
-        <Form.Control
-          type="date"
-          onChange={handleWeekEndingDate}
-        ></Form.Control>
-      </Form.Group>
+    <Form onSubmit={handleRotaSubmit}>
+      <ToastContainer />
+      <Form.Row className="d-flex justify-content-between">
+        <Form.Group as={Col}>
+          <Form.Label>Week Start</Form.Label>
+          <Form.Control
+            type="date"
+            onChange={handleWeekEndingDate}
+            disabled={week.length > 1 && true}
+          ></Form.Control>
+        </Form.Group>
+        <Form.Group as={Col}>
+          <Form.Label>&nbsp;</Form.Label>
+          <Button
+            variant="danger"
+            block
+            onClick={handleResetWeek}
+            disabled={week.length === 1 && true}
+          >
+            Reset
+          </Button>
+        </Form.Group>
+        <Form.Group as={Col}>
+          <Form.Label>&nbsp;</Form.Label>
+          <Button
+            variant="success"
+            block
+            type="submit"
+            disabled={week.length < 2 && true}
+          >
+            Save
+          </Button>
+        </Form.Group>
+      </Form.Row>
 
-      {week.length !== 0 ? (
+      {week.length > 1 ? (
         week.map((day, i) => (
           <React.Fragment key={i}>
-          <Form.Row key={i}>
-            <Form.Group>
-              {/* <Form.Label>Day</Form.Label> */}
-              <Form.Control
-                type="text"
-                placeholder={day.date}
-                name={day.day}
-                defaultValue={day.date}
-                className={i > 5 ? "bg-danger text-light" : "bg-info text-light"}
-              />
-            </Form.Group>
+            <Form.Row key={i}>
+              <Form.Group>
+                <Form.Control
+                  type="text"
+                  placeholder={day.date}
+                  name={day.day}
+                  defaultValue={day.date}
+                  className={
+                    i > 5 ? "bg-danger text-light" : "bg-info text-light"
+                  }
+                />
+              </Form.Group>
             </Form.Row>
             {day.employees.map((emp, i) => (
               <Form.Row key={i}>
                 <Form.Group>
-                  {/* {day.employees[`${i < 2}`] ? (<Form.Label>Select Employee:</Form.Label>) : null} */}
                   <Form.Control
                     as="select"
                     onChange={(e) => handleChangeEmployees(e, day.dayId, i)}
                     name="nameId"
+                    required
                   >
-                    <option>Select Employee</option>
+                    <option value="">Select Employee</option>
                     {users.length !== 0 ? (
                       users.map((user) => (
                         <option key={user._id} value={user._id}>
@@ -124,36 +199,61 @@ const RotaCreatorComponent = () => {
                   </Form.Control>
                 </Form.Group>
                 <Form.Group>
-                  {/* <Form.Label>Start</Form.Label> */}
                   <Form.Control
                     type="text"
                     onChange={(e) => handleChangeEmployees(e, day.dayId, i)}
                     placeholder="start hh:mm"
                     name="start"
+                    pattern="^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$"
+                    title="HH:MM 24-hrs format"
                     value={emp.start}
+                    required
                   ></Form.Control>
+                  <Form.Control.Feedback type="invalid">
+                    Please use valid HH:MM 24-hrs format.
+                  </Form.Control.Feedback>
                 </Form.Group>
                 <Form.Group>
-                  {/* <Form.Label>Finish</Form.Label> */}
                   <Form.Control
                     type="text"
                     name="finish"
+                    pattern="^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$"
+                    title="HH:MM 24-hrs format"
                     placeholder="finish hh:mm"
                     value={emp.finish}
                     onChange={(e) => handleChangeEmployees(e, day.dayId, i)}
+                    required
                   ></Form.Control>
                 </Form.Group>
                 <Form.Group>
-                  {/* <Form.Label>&nbsp;</Form.Label> */}
+                  {day.employees.length - 1 === i && (
+                    <Button
+                      className="mx-1"
+                      block
+                      disabled={
+                        emp.nameId.length === 0 ||
+                        emp.start.length === 0 ||
+                        emp.finish.length === 0
+                          ? true
+                          : false
+                      }
+                      onClick={() => handleAddEmployee(day.dayId)}
+                      variant="success"
+                    >
+                      <i className="fas fa-plus"></i>
+                    </Button>
+                  )}
+                </Form.Group>
+                <Form.Group>
                   <Button
                     className="mx-1"
                     block
-                    disabled={false}
-                    onClick={(e) => handleAddEmployee(day.dayId)}
-                    variant="warning"
+                    disabled={day.employees.length === 1 ? true : false}
+                    onClick={() => handleRemoveEmployee(day.dayId, i)}
+                    variant="danger"
                   >
-                    <i className="fas fa-plus"></i>
-                  </Button>{" "}
+                    <i className="fas fa-minus"></i>
+                  </Button>
                 </Form.Group>
               </Form.Row>
             ))}
