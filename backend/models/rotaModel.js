@@ -17,7 +17,7 @@ const rotaSchema = new mongoose.Schema(
 
         employees: [
           {
-            employeeId: {
+            nameId: {
               type: mongoose.Schema.Types.ObjectId,
               ref: "User",
             },

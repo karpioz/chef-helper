@@ -38,27 +38,28 @@ const RotaCreatorComponent = () => {
     fetchUsers();
   }, []);
 
+  // sending rota to the database
   useEffect(() => {
-    console.log(JSON.stringify(newWeeklyRota));
+    //console.log(JSON.stringify(newWeeklyRota));
     // axios to connect with backend
-    const length = Object.keys(newWeeklyRota.weeklyRota).length;
+    /* let length = Object.keys(newWeeklyRota.weeklyRota).length;
     console.log(length);
-    if (length > 1) {
-      axios({
-        method: "POST",
-        url: `${process.env.REACT_APP_API}/rota`,
-        data: { weeklyRota, dayId, day, date, employees },
+    if (length > 1) { */
+    axios({
+      method: "POST",
+      url: `${process.env.REACT_APP_API}/rota`,
+      data: { weeklyRota, dayId, day, date, employees },
+    })
+      .then((response) => {
+        handleResetWeek();
+        toast.success(response.data.message);
       })
-        .then((response) => {
-          handleResetWeek();
-          toast.success(response.data.message);
-        })
-        .catch((error) => {
-          console.log("ROTA CREATE ERROR", error.response.data);
-          setWeek({ ...week });
-          toast.error(error.response.data.error);
-        });
-    }
+      .catch((error) => {
+        console.log("ROTA CREATE ERROR", error.response.data);
+        setWeek({ ...week });
+        toast.error(error.response.data.error);
+      });
+    //}
   }, [newWeeklyRota]);
 
   const handleWeekEndingDate = (e) => {
@@ -119,8 +120,8 @@ const RotaCreatorComponent = () => {
     e.preventDefault();
     let newRota = { weeklyRota: [] };
     newRota.weeklyRota = [...week];
-    setNewWeeklyRota(newRota);
     console.log("weekly rota saved");
+    setNewWeeklyRota(newRota);
   };
 
   return (

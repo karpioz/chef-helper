@@ -1,17 +1,22 @@
 import React from "react";
 import { Row, Col } from "react-bootstrap";
 import RotaCreatorComponent from "../components/RotaCreatorComponentTwo";
+import RotaDisplayComponent from "../components/RotaDisplayComponent";
+import RotaDisplayComponentCards from "../components/RotaDisplayComponentCards";
+import { isAuth } from "../utilities/authUtilities";
 
 const RotaScreen = () => {
   return (
     <>
       <Row>
-        <Col>
-          <h1>Rota</h1>
-        </Col>
-      </Row>
-      <Row>
-        <RotaCreatorComponent />
+        {isAuth() && isAuth().role === "admin" ? (
+          <>
+            <h2>Rota Creator</h2>
+            <RotaCreatorComponent />
+          </>
+        ) : (
+          <RotaDisplayComponentCards />
+        )}
       </Row>
     </>
   );
