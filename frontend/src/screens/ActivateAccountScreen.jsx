@@ -5,7 +5,7 @@ import "react-toastify/dist/ReactToastify.min.css";
 import axios from "axios";
 import jwt from "jsonwebtoken";
 
-const ActivateAccountScreen = ({ match }) => {
+const ActivateAccountScreen = ({ match, history }) => {
   // state with useState hook
   const [formData, setFormData] = useState({
     name: "",
@@ -42,6 +42,9 @@ const ActivateAccountScreen = ({ match }) => {
           show: false,
         });
         toast.success(response.data.message);
+        setTimeout(() => {
+          history.push("/login");
+        }, 4000);
       })
       .catch((error) => {
         console.log("ACCOUNT ACTIVATION", error.response.data.error);
@@ -53,7 +56,10 @@ const ActivateAccountScreen = ({ match }) => {
     <>
       <ToastContainer />
 
-      <h1 className="text-center">Welcome {name} </h1>
+      <h1 className="text-center">
+        Please confirm the account activation for{" "}
+        <span className="text-danger">{name}</span>{" "}
+      </h1>
       <p>Please click button below to complete the registration process.</p>
 
       <Button onClick={clickActivate} variant={"success"}>

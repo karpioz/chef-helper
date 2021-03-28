@@ -7,6 +7,7 @@ const router = express.Router();
 import {
   signupUser,
   signupUserWithSendGrid,
+  signupUserWithSendGridByAdmin,
   loginUser,
   accountActivation,
   authUser,
@@ -26,7 +27,7 @@ router.post(
   "/signup",
   userSignUpValidator,
   runValidation,
-  signupUserWithSendGrid
+  signupUserWithSendGridByAdmin
 );
 
 // log-in

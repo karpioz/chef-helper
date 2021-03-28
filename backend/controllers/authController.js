@@ -43,6 +43,7 @@ const signupUser = (req, res) => {
   });
 };
 
+// signing user by sending activation email to user's account
 const signupUserWithSendGrid = (req, res) => {
   // geting data from request body
   const { name, email, password } = req.body;
@@ -82,6 +83,53 @@ const signupUserWithSendGrid = (req, res) => {
     .then((sent) => {
       return res.json({
         message: `Activation email has been sent to ${email}. Activation link will expire in 15 minutes`,
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
+// signing user by sending activation email to admin's account
+const signupUserWithSendGridByAdmin = (req, res) => {
+  // geting data from request body
+  const { name, email, password } = req.body;
+
+  // checking database for existing email
+  User.findOne({ email }).exec((err, user) => {
+    if (user) {
+      return res.status(400).json({
+        error: "Email is taken",
+      });
+    }
+  });
+
+  // creating token for email activation
+  const token = jwt.sign(
+    { name, email, password },
+    process.env.JWT_ACCOUNT_ACTIVATION,
+    { expiresIn: "1d" }
+  );
+
+  // creating activating email
+  const emailData = {
+    from: process.env.EMAIL_FROM,
+    to: process.env.EMAIL_FROM,
+    subject: "Chef's Helper - Account activation",
+    html: `
+    <h1>Chef Helper account activation</h1>
+    <p>Hi user ${name} would like to create an account</p>
+    <p>${process.env.CLIENT_URL}/auth/activate/${token}</p>
+    <p>${process.env.CLIENT_URL}</p>
+    `,
+  };
+
+  // sending an email
+  sendGridMail
+    .send(emailData)
+    .then((sent) => {
+      return res.json({
+        message: `Account Activation request has been sent to Admin. Please wait for Activation.`,
       });
     })
     .catch((err) => {
@@ -217,6 +265,7 @@ const getUserNames = asyncHandler(async (req, res) => {
 export {
   signupUser,
   signupUserWithSendGrid,
+  signupUserWithSendGridByAdmin,
   accountActivation,
   loginUser,
   authUser,
