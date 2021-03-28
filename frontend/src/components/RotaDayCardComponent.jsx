@@ -21,12 +21,14 @@ function RotaDayCardComponent({ day, employees }) {
       <Card.Header>
         <Card.Title>
           <strong
-            className={day.dayId === 6 ? "text-danger" : "text-secondary"}
+            className={`${
+              day.dayId === 6 ? "text-danger" : "text-secondary"
+            } rota-dayCard__day`}
           >
             {dayOfTheWeek.substring(0, 3)}
           </strong>
         </Card.Title>
-        {`${dateFormatted[1]} ${dateFormatted[2].substring(0, 5)}`}
+        {`${dateFormatted[1]}, ${dateFormatted[2].substring(0, 5)}`}
       </Card.Header>
       <Card.Body>
         <ListGroup flush="true">

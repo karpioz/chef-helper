@@ -15,3 +15,9 @@ main {
 .logo__text-helper {
   font-size: 1.5rem;
 }
+
+.rota-dayCard__day {
+  font-family: "Alfa Slab One", cursive;
+  font-size: 2rem;
+  letter-spacing: 2px;
+}
