@@ -53,6 +53,11 @@ const Header = ({ history }) => {
                   >
                     <NavDropdown.Item>Profile</NavDropdown.Item>
                   </LinkContainer>
+                  {isAuth().role === "admin" ? (
+                    <LinkContainer to={"/admin/users"}>
+                      <NavDropdown.Item>Users</NavDropdown.Item>
+                    </LinkContainer>
+                  ) : null}
                   <NavDropdown.Item
                     onClick={() => {
                       logout(() => {

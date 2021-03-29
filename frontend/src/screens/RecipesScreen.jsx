@@ -23,13 +23,13 @@ const RecipesScreen = () => {
         </Col>
       </Row>
       <Row>
-        <CardDeck>
+        <>
           {recipes.map((recipe) => (
             <Col key={recipe._id} sm={12} md={6} lg={4} xl={3}>
               <RecipeComponent recipe={recipe} />
             </Col>
           ))}
-        </CardDeck>
+        </>
       </Row>
     </>
   );

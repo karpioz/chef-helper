@@ -245,7 +245,7 @@ const authUser = asyncHandler(async (req, res) => {
   }
 });
 
-// @desc fetch all users
+// @desc fetch all user names and ids
 // @route GET /api/users
 // @access Public
 
@@ -262,6 +262,100 @@ const getUserNames = asyncHandler(async (req, res) => {
   } catch (error) {}
 });
 
+// @desc fetch all users data
+// @route GET /api/users
+// @access Public
+
+const getUsers = asyncHandler(async (req, res) => {
+  try {
+    const users = await User.find({});
+    if (users) {
+      res.json(users);
+    } else {
+      res.status(500).json({
+        error: "Something went wrong",
+      });
+    }
+  } catch (error) {}
+});
+
+// @desc delete user
+// @route DELETE /api/users/:id
+// @access Private/Admin
+const deleteUser = asyncHandler(async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+    if (user) {
+      await user.remove();
+      res.json({
+        message: "User removed",
+      });
+    } else {
+      res.status(404).json({
+        error: "User not found",
+      });
+    }
+  } catch (error) {}
+});
+
+// @desc get user profile
+// @route GET /api/users/profile
+// @access Private
+const getUserProfile = asyncHandler(async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id);
+
+    if (user) {
+      res.json({
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+      });
+    } else {
+      res.status(404);
+      throw new Error("User not found");
+    }
+  } catch (error) {
+    throw new Error("User not found");
+  }
+});
+
+// @desc Update user profile
+// @route PUT /api/users/profile
+// @access Private
+const updateUserProfile = asyncHandler(async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id);
+
+    if (user) {
+      user.name = req.body.name || user.name;
+      user.email = req.body.email || user.email;
+      if (req.body.password) {
+        user.password = req.body.password;
+      }
+
+      const updatedUser = await user.save();
+      // generate token for the client valid for 7 days
+      const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
+        expiresIn: "7d",
+      });
+      res.json({
+        token,
+        _id: updatedUser._id,
+        name: updatedUser.name,
+        email: updatedUser.email,
+        role: updatedUser.role,
+      });
+    } else {
+      res.status(404);
+      throw new Error("User not found");
+    }
+  } catch (error) {
+    throw new Error("User not found");
+  }
+});
+
 export {
   signupUser,
   signupUserWithSendGrid,
@@ -270,4 +364,8 @@ export {
   loginUser,
   authUser,
   getUserNames,
+  getUsers,
+  deleteUser,
+  getUserProfile,
+  updateUserProfile,
 };
