@@ -357,6 +357,25 @@ const updateUserProfile = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc    Update user role
+// @route   PATCH /api/users/admin/:id
+// @access  Private/Admin
+const updateUserRole = asyncHandler(async (req, res) => {
+  const { role } = req.body;
+
+  const user = await User.findById(req.params.id);
+
+  if (user) {
+    user.role = role;
+
+    const updatedUser = await user.save();
+    res.json(updatedUser);
+  } else {
+    res.status(404);
+    throw new Error("User not found");
+  }
+});
+
 export {
   signupUser,
   signupUserWithSendGrid,
@@ -369,4 +388,5 @@ export {
   deleteUser,
   getUserProfile,
   updateUserProfile,
+  updateUserRole,
 };

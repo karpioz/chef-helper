@@ -16,6 +16,7 @@ import {
   deleteUser,
   getUserProfile,
   updateUserProfile,
+  updateUserRole,
 } from "../controllers/authController.js";
 
 // importing validators
@@ -24,7 +25,7 @@ import {
   userSignUpValidator,
 } from "../validators/authValidator.js";
 import { runValidation } from "../validators/index.js";
-import { protect } from "../middleware/authMiddleware.js";
+import { protect, adminAuth } from "../middleware/authMiddleware.js";
 
 // routes
 // sign-up
@@ -47,13 +48,16 @@ router.get("/users/names", getUserNames);
 //get all users data
 router.get("/users/", getUsers);
 
-// delete user
-router.delete("/:id", deleteUser);
+// delete user by id
+router.delete("/users/:id", protect, adminAuth, deleteUser);
 
 // get user's profile
 router.get("/users/profile/", protect, getUserProfile);
 
 // update user's profile
 router.put("/users/profile/", protect, updateUserProfile);
+
+// update user's role by admin only
+router.patch("/users/admin/:id", protect, adminAuth, updateUserRole);
 
 export default router;

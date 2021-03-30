@@ -36,4 +36,14 @@ const protect = asyncHandler(async (req, res, next) => {
   }
 });
 
-export { protect };
+const adminAuth = (req, res, next) => {
+  if (req.user && req.user.role === "admin") {
+    next();
+  } else {
+    res.status(401).json({
+      error: "Only For Admins",
+    });
+    throw new Error("Not authorized. Admin Only");
+  }
+};
+export { protect, adminAuth };
