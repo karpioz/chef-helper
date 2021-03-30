@@ -4,6 +4,8 @@ import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
 import RecipeCreatorComponent from "../components/RecipeCreatorComponent";
+import { setPriorityColour } from "../utilities/stylingUtilities";
+import { getCookie } from "../utilities/authUtilities.js";
 
 const AdminScreen = () => {
   // state with useState hook
@@ -92,26 +94,6 @@ const AdminScreen = () => {
       });
   };
 
-  // Tasks Form Handling
-  // Priority Colour Styles
-  const setPriorityColour = (priority) => {
-    let colour;
-    switch (priority) {
-      case "low":
-        colour = "info";
-        break;
-      case "medium":
-        colour = "warning";
-        break;
-      case "high":
-        colour = "danger";
-        break;
-      default:
-        colour = "success";
-    }
-    return colour;
-  };
-
   const changePriority = (event) => {
     setTaskPriority(event.target.value);
     setTaskFormData({ ...taskFormData, priority: event.target.value });
@@ -128,6 +110,10 @@ const AdminScreen = () => {
     axios({
       method: "POST",
       url: `${process.env.REACT_APP_API}/tasks`,
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getCookie("token")}`,
+      },
       data: { taskName, assignedTo, priority },
     })
       .then((response) => {
@@ -300,10 +286,6 @@ const AdminScreen = () => {
     };
   }, []);
 
-  /* useEffect(() => {
-    setRecipeLines(recipeLines);
-  }, [recipeLi nes]);*/
-
   return (
     <>
       <Row>
@@ -313,8 +295,8 @@ const AdminScreen = () => {
         </Col>
       </Row>
       <Row>
-        <Col>
-          <h2>Pantry Management</h2>
+        <Col className="my-3" md={6} sm={12} xl={6}>
+          <h2 className="my-3">Pantry Management</h2>
           <Form onSubmit={handleProductSubmit}>
             <Form.Group controlId="Name">
               <Form.Label>Product Name</Form.Label>
@@ -323,6 +305,7 @@ const AdminScreen = () => {
                 placeholder="Product Name"
                 onChange={handleProductInputChange("name")}
                 value={name}
+                required
               ></Form.Control>
             </Form.Group>
             <Form.Group controlId="quantity">
@@ -333,6 +316,7 @@ const AdminScreen = () => {
                 placeholder="Quantity"
                 onChange={handleProductInputChange("countInStock")}
                 value={countInStock}
+                required
               ></Form.Control>
             </Form.Group>
             <Form.Group controlId="price">
@@ -353,6 +337,7 @@ const AdminScreen = () => {
                 placeholder="Weight"
                 onChange={handleProductInputChange("defaultWeightInGrams")}
                 value={defaultWeightInGrams}
+                required
               ></Form.Control>
             </Form.Group>
 
@@ -361,8 +346,8 @@ const AdminScreen = () => {
             </Button>
           </Form>
         </Col>
-        <Col>
-          <h2>Task</h2>
+        <Col className="my-3" md={6} sm={12} xl={6}>
+          <h2 className="my-3">Tasks Assignement</h2>
           <Form onSubmit={handleTaskSubmit}>
             <Form.Group controlId="Name">
               <Form.Label>Job to do</Form.Label>
@@ -371,6 +356,7 @@ const AdminScreen = () => {
                 placeholder="Task Name"
                 onChange={handleTaskInputChange("taskName")}
                 value={taskName}
+                required
               ></Form.Control>
             </Form.Group>
             <Form.Group controlId="priority">
@@ -395,7 +381,7 @@ const AdminScreen = () => {
             </Form.Group>
             <Form.Group controlId="assignedTo">
               <Form.Label>Assign Task to:</Form.Label>
-              <Form.Control as="select" onChange={changeAssignedTo}>
+              <Form.Control as="select" onChange={changeAssignedTo} required>
                 <option>Select user</option>
                 {users.length !== 0 ? (
                   users.map((user) => (

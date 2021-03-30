@@ -27,6 +27,7 @@ const RecipeCreatorComponent = ({
             placeholder="Dish Name"
             name="label"
             value={label}
+            required
           ></Form.Control>
         </Form.Group>
         <Form.Group as={Col} controlId="healthLabels">

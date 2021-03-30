@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { Row, Col, Table, Spinner, Button, Form, Modal } from "react-bootstrap";
-import { LinkContainer } from "react-router-bootstrap";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
@@ -152,7 +151,7 @@ const AdminUsersScreen = () => {
                       <i className="fas fa-times text-danger"></i>
                     )}
                   </td>
-                  <td>
+                  <td className="text-right">
                     <Button
                       variant="light"
                       className="btn-sm"

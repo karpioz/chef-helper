@@ -7,25 +7,32 @@ import {
   Button,
   Form,
   Modal,
+  Spinner,
 } from "react-bootstrap";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
 import axios from "axios";
-import { isAuth } from "../utilities/authUtilities";
+import { setPriorityColour } from "../utilities/stylingUtilities";
+import { isAuth, getCookie } from "../utilities/authUtilities";
 import { formatDistance, subDays, format } from "date-fns";
 
 const TasksScreen = () => {
   const [tasks, setTasks] = useState([]);
+  const [users, setUsers] = useState([]);
   const [modalData, setModalData] = useState([]);
   const [show, setShow] = useState(false);
   const [isCompleted, setIsCompleted] = useState(false);
   const [showRemove, setShowRemove] = useState(false);
   const [closeRemove, setCloseRemove] = useState(false);
   const [submitRemove, setSubmitRemove] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [taskPriority, setTaskPriority] = useState("select");
+  const [isTaskUpdated, setIsTaskUpdated] = useState(false);
 
   const handleClose = () => setShow(false);
 
   const handleCloseRemove = () => setShowRemove(false);
+  const handleCloseEditModal = () => setShowEditModal(false);
 
   const handleModalSubmitRemove = (e) => {
     const { _id } = modalData;
@@ -33,6 +40,10 @@ const TasksScreen = () => {
     axios({
       method: "DELETE",
       url: `${process.env.REACT_APP_API}/tasks/${modalData._id}`,
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getCookie("token")}`,
+      },
       data: { _id },
     }).then((response) => {
       console.log("item removed");
@@ -58,6 +69,10 @@ const TasksScreen = () => {
     axios({
       method: "PATCH",
       url: `${process.env.REACT_APP_API}/tasks/finished/${_id}`,
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getCookie("token")}`,
+      },
       data: { completed, priority },
     }).then((response) => {
       toast.success(`Task has been completed!`);
@@ -65,39 +80,86 @@ const TasksScreen = () => {
     });
   };
 
-  // Priority Colour Styles
-  const setPriorityColour = (level) => {
-    let colour;
-    switch (level) {
-      case "low":
-        colour = "info";
-        break;
-      case "medium":
-        colour = "warning";
-        break;
-      case "high":
-        colour = "danger";
-        break;
-      default:
-        colour = "success";
-    }
-    return colour;
+  // Update Task Modal Handlers
+  // handling Tasks form changes
+  const handleTaskInputChange = (name) => (event) => {
+    console.log(event.target.value);
+    // getting existing state and update the key with same name as function argument
+    setModalData({ ...modalData, [name]: event.target.value });
+    console.log(modalData);
+  };
+
+  const changePriority = (event) => {
+    setTaskPriority(event.target.value);
+    setModalData({ ...modalData, priority: event.target.value });
+  };
+
+  const changeAssignedTo = (event) => {
+    setModalData({ ...modalData, assignedTo: event.target.value });
+  };
+
+  // submitting edited task
+  const handleEditTaskSubmit = (e) => {
+    e.preventDefault();
+    const { _id, taskName, assignedTo, priority } = modalData;
+    axios({
+      method: "PATCH",
+      url: `${process.env.REACT_APP_API}/tasks/admin/${_id}`,
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getCookie("token")}`,
+      },
+      data: { taskName, priority, assignedTo },
+    }).then((response) => {
+      toast.success(`Task has been updated`);
+      setIsTaskUpdated(true);
+      handleCloseEditModal();
+    });
+  };
+
+  const handleShowEditModal = (id) => {
+    setModalData(() => tasks.find((task) => task._id === id));
+    setShowEditModal(true);
+    setIsTaskUpdated(false);
   };
 
   // fetching tasks on load
   const fetchTasks = async () => {
-    const { data } = await axios.get(`${process.env.REACT_APP_API}/tasks`);
+    const { data } = await axios.get(`${process.env.REACT_APP_API}/tasks`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getCookie("token")}`,
+      },
+    });
     setTasks(data);
     setIsCompleted(false);
   };
 
+  // fetching users on load
+  const fetchUsers = async () => {
+    const response = await axios.get(
+      `${process.env.REACT_APP_API}/users/names`
+    );
+    //console.log(response);
+    if (response) {
+      setUsers(response.data);
+    } else {
+      console.log("something went wrong when fetching users...");
+    }
+  };
+
   useEffect(() => {
+    fetchUsers();
     fetchTasks();
+    return () => {
+      setUsers([]);
+      setTasks([]);
+    };
   }, []);
 
   useEffect(() => {
     fetchTasks();
-  }, [isCompleted]);
+  }, [isCompleted, isTaskUpdated]);
 
   return (
     <Container>
@@ -162,7 +224,13 @@ const TasksScreen = () => {
                         </Button>
                       </Form>
 
-                      <Button className="mx-1" variant="warning" size="sm">
+                      <Button
+                        className="mx-1"
+                        disabled={task.completed ? true : false}
+                        variant="warning"
+                        size="sm"
+                        onClick={() => handleShowEditModal(task._id)}
+                      >
                         <i className="fas fa-edit"></i>
                       </Button>
                       {isAuth() && isAuth().role === "admin" ? (
@@ -207,6 +275,83 @@ const TasksScreen = () => {
             </Button>
             <Button variant="danger" type="submit">
               Remove
+            </Button>
+          </Modal.Footer>
+        </Form>
+      </Modal>
+      {/* Edit Task Privileges */}
+      <Modal show={showEditModal} onHide={handleClose} animation={false}>
+        <Modal.Header closeButton>
+          <Modal.Title>Edit Task</Modal.Title>
+        </Modal.Header>
+        <Form onSubmit={handleEditTaskSubmit}>
+          <Modal.Body>
+            <h3>
+              Task : <span className="text-danger">{modalData.taskName}</span>
+            </h3>
+            <Form.Group controlId="Name">
+              <Form.Label>Job to do</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Task Name"
+                onChange={handleTaskInputChange("taskName")}
+                value={modalData.taskName}
+              ></Form.Control>
+            </Form.Group>
+            <Form.Group controlId="priority">
+              <Form.Label>Priority</Form.Label>
+
+              <Form.Control
+                as="select"
+                onChange={changePriority}
+                value={modalData.priority}
+                className={`bg-${setPriorityColour(
+                  modalData.priority
+                )} text-light`}
+              >
+                <option className="bg-info" value="low">
+                  Low
+                </option>
+                <option className="bg-warning" value="medium">
+                  Medium
+                </option>
+                <option className="bg-danger" value="high">
+                  High
+                </option>
+              </Form.Control>
+            </Form.Group>
+            {users.length !== 0 ? (
+              <Form.Group controlId="assignedTo">
+                <Form.Label>Assign Task to:</Form.Label>
+                <Form.Control as="select" onChange={changeAssignedTo}>
+                  {users.length !== 0 ? (
+                    users.map((user) => (
+                      <option
+                        selected={modalData.assignedTo}
+                        key={user._id}
+                        value={user._id}
+                      >
+                        {user.name}
+                      </option>
+                    ))
+                  ) : (
+                    <option className="bg-danger text-light">
+                      Error fetching users
+                    </option>
+                  )}
+                </Form.Control>
+              </Form.Group>
+            ) : (
+              <Spinner />
+            )}
+            {/*   */}
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="danger" onClick={handleCloseEditModal}>
+              Cancel
+            </Button>
+            <Button variant="warning" type="submit">
+              Update Task
             </Button>
           </Modal.Footer>
         </Form>
