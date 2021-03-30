@@ -7,10 +7,8 @@ import "react-toastify/dist/ReactToastify.min.css";
 
 moment.locale("en-gb");
 
-const RotaCreatorComponent = () => {
-  const [users, setUsers] = useState([]);
-  const [employeesArr, setEmployeesArr] = useState([]);
-  const [isFetchingUsers, setIsFetchingUsers] = useState(true);
+const RotaCreatorComponent = ({users}) => {
+
   const [week, setWeek] = useState([
     { dayId: "", day: "", date: "", employees: [] },
   ]);
@@ -19,24 +17,6 @@ const RotaCreatorComponent = () => {
   ]);
 
   const { weeklyRota, dayId, day, date, employees } = newWeeklyRota;
-
-  // fetching users on load
-  const fetchUsers = async () => {
-    const response = await axios.get(
-      `${process.env.REACT_APP_API}/users/names`
-    );
-    //console.log(response);
-    if (response) {
-      setUsers(response.data);
-      setIsFetchingUsers(false);
-    } else {
-      console.log("something went wrong when fetching users...");
-    }
-  };
-
-  useEffect(() => {
-    fetchUsers();
-  }, []);
 
   // sending rota to the database
   useEffect(() => {
@@ -263,8 +243,6 @@ const RotaCreatorComponent = () => {
       ) : (
         <p className="text-danger">Please set week begining</p>
       )}
-
-      {JSON.stringify(week)}
     </Form>
   );
 };

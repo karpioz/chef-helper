@@ -45,7 +45,6 @@ const PantryScreen = () => {
       url: `${process.env.REACT_APP_API}/products/${modalData._id}`,
       data: { name, countInStock },
     }).then((response) => {
-      console.log("qyantity updated", response);
       toast.success(`Quantity of ${name} updated sucesfully!`);
       setSubmitAdd(true);
     });

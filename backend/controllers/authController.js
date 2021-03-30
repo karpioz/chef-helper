@@ -346,6 +346,7 @@ const updateUserProfile = asyncHandler(async (req, res) => {
         name: updatedUser.name,
         email: updatedUser.email,
         role: updatedUser.role,
+        message: "User profile has been updated",
       });
     } else {
       res.status(404);

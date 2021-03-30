@@ -65,6 +65,17 @@ const logout = (next) => {
   next();
 };
 
+// update user data in local storage
+const updateUserLocalStorage = (response, next) => {
+  console.log("UPDATE USER IN LOCAL STORAGE UTIL");
+  if (window !== undefined) {
+    let auth = JSON.parse(localStorage.getItem("user"));
+    auth = response.data;
+    localStorage.setItem("user", JSON.stringify(auth));
+  }
+  next();
+};
+
 export {
   setCookie,
   removeCookie,
@@ -74,4 +85,5 @@ export {
   authenticate,
   isAuth,
   logout,
+  updateUserLocalStorage,
 };

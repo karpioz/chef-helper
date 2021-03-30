@@ -1,12 +1,21 @@
 import asyncHandler from "express-async-handler";
 import Rota from "../models/rotaModel.js";
 
-// @desc fetch all recipes
-// @route GET /api/recipes
+// @desc fetch all rotas
+// @route GET /api/rota
 // @access Public
 
 const getRota = asyncHandler(async (req, res) => {
   const rota = await Rota.find({});
+  res.json(rota);
+});
+
+// @desc fetch rota by id
+// @route GET /api/rota/:id
+// @access Public
+
+const getRotaById = asyncHandler(async (req, res) => {
+  const rota = await Rota.find(req.body.id);
   res.json(rota);
 });
 
@@ -37,4 +46,4 @@ const createRota = asyncHandler(async (req, res) => {
   });
 });
 
-export { getRota, createRota };
+export { getRota, getRotaById, createRota };
