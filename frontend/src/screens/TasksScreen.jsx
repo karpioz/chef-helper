@@ -223,26 +223,28 @@ const TasksScreen = () => {
                           <i className="fas fa-check"></i>
                         </Button>
                       </Form>
-
-                      <Button
-                        className="mx-1"
-                        disabled={task.completed ? true : false}
-                        variant="warning"
-                        size="sm"
-                        onClick={() => handleShowEditModal(task._id)}
-                      >
-                        <i className="fas fa-edit"></i>
-                      </Button>
                       {isAuth() && isAuth().role === "admin" ? (
-                        <Button
-                          /* disabled={task.completed ? false : true} */
-                          className="mx-1"
-                          variant="danger"
-                          size="sm"
-                          onClick={() => handleShowRemove(task._id)}
-                        >
-                          <i className="fas fa-minus"></i>
-                        </Button>
+                        <>
+                          <Button
+                            className="mx-1"
+                            disabled={task.completed ? true : false}
+                            variant="warning"
+                            size="sm"
+                            onClick={() => handleShowEditModal(task._id)}
+                          >
+                            <i className="fas fa-edit"></i>
+                          </Button>
+
+                          <Button
+                            /* disabled={task.completed ? false : true} */
+                            className="mx-1"
+                            variant="danger"
+                            size="sm"
+                            onClick={() => handleShowRemove(task._id)}
+                          >
+                            <i className="fas fa-minus"></i>
+                          </Button>
+                        </>
                       ) : null}
                     </td>
                   ) : (

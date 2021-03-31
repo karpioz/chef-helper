@@ -121,7 +121,7 @@ const PantryScreen = () => {
             <thead className="bg-dark text-light">
               <tr>
                 <th>Name</th>
-                <th>Quantity</th>
+                <th>Quantity (grams)</th>
                 <th>Price</th>
                 <th>Actions</th>
               </tr>
@@ -132,26 +132,34 @@ const PantryScreen = () => {
                   <td>{product.name}</td>
                   <td>{product.countInStock}</td>
                   <td>{product.price}</td>
-                  <td className="text-right">
-                    <Button
-                      className="mx-1"
-                      variant="warning"
-                      size="sm"
-                      onClick={() => handleShow(product._id)}
-                    >
-                      <i className="fas fa-edit"></i>
-                    </Button>
-                    {isAuth() && isAuth().role === "admin" ? (
+                  {isAuth() ? (
+                    <td className="text-right">
                       <Button
                         className="mx-1"
-                        variant="danger"
+                        variant="warning"
                         size="sm"
-                        onClick={() => handleShowRemove(product._id)}
+                        onClick={() => handleShow(product._id)}
                       >
-                        <i className="fas fa-minus"></i>
+                        <i className="fas fa-edit"></i>
                       </Button>
-                    ) : null}
-                  </td>
+                      {isAuth() && isAuth().role === "admin" ? (
+                        <Button
+                          className="mx-1"
+                          variant="danger"
+                          size="sm"
+                          onClick={() => handleShowRemove(product._id)}
+                        >
+                          <i className="fas fa-minus"></i>
+                        </Button>
+                      ) : null}
+                    </td>
+                  ) : (
+                    <td>
+                      <p className="text-danger text-small">
+                        <small>Please login to see actions</small>
+                      </p>
+                    </td>
+                  )}
                 </tr>
               ))}
             </tbody>

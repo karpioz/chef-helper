@@ -243,7 +243,6 @@ const AdminUsersScreen = () => {
                 checked={modalData.role === "admin"}
               />
             </Form.Group>
-            {JSON.stringify(modalData)}
           </Modal.Body>
           <Modal.Footer>
             <Button variant="warning" onClick={handleCloseEditModal}>
