@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Row, Col, Table } from "react-bootstrap";
+import { Table } from "react-bootstrap";
 
 function RotaDisplayComponent() {
   const [employees, setEmployees] = useState([]);
   const [rota, setRota] = useState([]);
   const [isFetchingEmployees, setIsFetchingEmployees] = useState(true);
   const [isFetchingRota, setIsFetchingRota] = useState(true);
-  const [employeesTable, setEmployeesTable] = useState([]);
-  const [dataReady, setDataReady] = useState(false);
 
   const getEmployees = async () => {
     const response = await axios.get(
@@ -32,42 +30,10 @@ function RotaDisplayComponent() {
     }
   };
 
-  /* if (!isFetchingEmployees && !isFetchingRota) setDataReady(true); */
-
   useEffect(() => {
     getEmployees();
     getRota();
-    //createEmployeesTable();
   }, []);
-
-  const createEmployeesTable = () => {
-    //let isWorking = false;
-    //let employees = rota[0].weeklyRota[day].employees[0]["_id"];
-    let employeesArr = [];
-    for (let i = 0; i <= 6; i++) {
-      employeesArr.push(rota[0].weeklyRota[i].employees);
-    }
-    /* console.log("day: " + day);
-    console.log("name Id: " + emp);
-    console.log("day/should work Id " + employees); */
-
-    console.log(employeesArr);
-    /* employeesArr.forEach((em) =>
-      em._id === emp ? (isWorking = true) : (isWorking = false)
-    ); */
-
-    //return isWorking;
-    setEmployeesTable(employeesArr);
-  };
-
-  /* useEffect(() => {
-    createEmployeesTable();
-  }, [dataReady]); */
-
-  /* const renderTable = (emp, day) => {
-    let employees = [...rota[0].weeklyRota[0].employees];
-    employees.forEach((e, i) => checkIfWorking(e._id, day));
-  }; */
 
   return (
     <>

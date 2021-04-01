@@ -12,11 +12,17 @@ const getRota = asyncHandler(async (req, res) => {
 
 // @desc fetch rota by id
 // @route GET /api/rota/:id
-// @access Public
+// @access Private
 
 const getRotaById = asyncHandler(async (req, res) => {
-  const rota = await Rota.find(req.body.id);
-  res.json(rota);
+  const rota = await Rota.findById(req.params.id);
+  if (rota) {
+    res.json(rota);
+  } else {
+    res.status(404);
+    console.log(err.message);
+    //throw new Error('rota not found')
+  }
 });
 
 // @desc    Create rota
@@ -46,4 +52,28 @@ const createRota = asyncHandler(async (req, res) => {
   });
 });
 
-export { getRota, getRotaById, createRota };
+// @desc    Update rota
+// @route   POST /api/rota
+// @access  Private/Admin
+
+const updateRota = asyncHandler(async (req, res) => {
+  const { weeklyRota } = req.body;
+
+  const rota = await Rota.findById(req.params.id);
+
+  if (rota) {
+    rota.weeklyRota = weeklyRota;
+
+    const updatedRota = await rota.save();
+
+    res.json({
+      message: "Rota has been updated",
+    });
+  } else {
+    res.status(404).json({
+      error: "Rota not found",
+    });
+  }
+});
+
+export { getRota, getRotaById, createRota, updateRota };

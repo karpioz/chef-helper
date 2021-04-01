@@ -24,6 +24,7 @@ import ProfileScreen from "./screens/ProfileScreen";
 import AdminScreen from "./screens/AdminScreen";
 import AdminUsersScreen from "./screens/AdminUsersScreen";
 import AdminRotaCreatorScreen from "./screens/AdminRotaCreatorScreen";
+import AdminRotaEditScreen from "./screens/AdminRotaEditScreen";
 
 const App = () => {
   return (
@@ -55,6 +56,11 @@ const App = () => {
             path="/admin/rota"
             exact
             component={AdminRotaCreatorScreen}
+          />
+          <ProtectedAdminRoute
+            path="/rota/:id/edit"
+            exact
+            component={AdminRotaEditScreen}
           />
           <ProtectedAdminRoute path="/admin" exact component={AdminScreen} />
         </main>
