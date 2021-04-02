@@ -9,6 +9,7 @@ import {
   getRotaById,
   createRota,
   updateRota,
+  deleteRota,
 } from "../controllers/rotaController.js";
 
 // middleware
@@ -23,5 +24,7 @@ router.get("/:id", getRotaById);
 router.post("/", createRota);
 // update rota
 router.patch("/:id", protect, adminAuth, updateRota);
+// delete rota
+router.delete("/:id", protect, adminAuth, deleteRota);
 
 export default router;

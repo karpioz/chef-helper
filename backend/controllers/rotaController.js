@@ -76,4 +76,23 @@ const updateRota = asyncHandler(async (req, res) => {
   }
 });
 
-export { getRota, getRotaById, createRota, updateRota };
+// @desc delete rota
+// @route DELETE /api/rota/:id
+// @access Private/Admin
+const deleteRota = asyncHandler(async (req, res) => {
+  try {
+    const rota = await Rota.findById(req.params.id);
+    if (rota) {
+      await rota.remove();
+      res.json({
+        message: "rota has been removed",
+      });
+    } else {
+      res.status(404).json({
+        error: "rota not found",
+      });
+    }
+  } catch (error) {}
+});
+
+export { getRota, getRotaById, createRota, updateRota, deleteRota };

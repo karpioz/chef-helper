@@ -3,6 +3,7 @@ import { Form, Button, Col, Container, Spinner } from "react-bootstrap";
 import moment from "moment";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
+import { LinkContainer } from "react-router-bootstrap";
 
 moment.locale("en-gb");
 
@@ -97,16 +98,6 @@ const RotaEditComponent = ({ users, rota, submitEditedRota }) => {
             <Form.Group as={Col}>
               <Form.Label>&nbsp;</Form.Label>
               <Button
-                variant="danger"
-                block
-                disabled={week.length === 1 && true}
-              >
-                Reset
-              </Button>
-            </Form.Group>
-            <Form.Group as={Col}>
-              <Form.Label>&nbsp;</Form.Label>
-              <Button
                 variant="warning"
                 block
                 type="submit"
@@ -125,6 +116,15 @@ const RotaEditComponent = ({ users, rota, submitEditedRota }) => {
               >
                 Save
               </Button>
+            </Form.Group>
+            <Form.Group as={Col}>
+              <Form.Label>&nbsp;</Form.Label>
+              <LinkContainer to={`/admin/rota`}>
+                <Button variant="danger" block>
+                  Cancel
+                  <i class="fas fa-history mx-3"></i>
+                </Button>
+              </LinkContainer>
             </Form.Group>
           </Form.Row>
 

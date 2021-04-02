@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Row, Col, Table, Spinner, Button } from "react-bootstrap";
+import { Row, Col, Spinner } from "react-bootstrap";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";

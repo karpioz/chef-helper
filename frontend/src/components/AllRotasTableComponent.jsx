@@ -2,7 +2,7 @@ import React from "react";
 import { Table, Button } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 
-const AllRotasTableComponent = ({ rotas, handleDeleteRota }) => {
+const AllRotasTableComponent = ({ rotas, handleShowRemoveModal }) => {
   return (
     <Table striped bordered hover responsive className="table-sm">
       <thead>
@@ -26,7 +26,7 @@ const AllRotasTableComponent = ({ rotas, handleDeleteRota }) => {
               <Button
                 variant="danger"
                 className="btn-sm"
-                onClick={() => handleDeleteRota(rota._id)}
+                onClick={() => handleShowRemoveModal(rota._id)}
               >
                 <i className="fas fa-trash"></i>
               </Button>
