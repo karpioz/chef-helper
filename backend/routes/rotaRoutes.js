@@ -11,6 +11,9 @@ import {
   updateRota,
 } from "../controllers/rotaController.js";
 
+// middleware
+import { protect, adminAuth } from "../middleware/authMiddleware.js";
+
 // routes
 // read all rotas data
 router.get("/", getRota);
@@ -19,6 +22,6 @@ router.get("/:id", getRotaById);
 // create new rota
 router.post("/", createRota);
 // update rota
-router.patch("/:id", updateRota);
+router.patch("/:id", protect, adminAuth, updateRota);
 
 export default router;

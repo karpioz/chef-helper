@@ -47,7 +47,7 @@ const RotaEditComponent = ({ users, rota, submitEditedRota }) => {
     setUpdatedRota(newUpdatedRota);
     console.log("updated rota saved");
     setIsRotaChanged(true);
-    console.log(JSON.stringify(updatedRota));
+    toast.success(`Rota has been changed. Please click save now!`);
   };
 
   const getUserNames = (id) => {

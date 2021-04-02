@@ -5,6 +5,7 @@ import { useParams } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
 import RotaEditComponent from "../components/RotaEditComponent";
+import { getCookie } from "../utilities/authUtilities";
 
 const AdminRotaEditScreen = () => {
   // state with useState hook
@@ -15,6 +16,7 @@ const AdminRotaEditScreen = () => {
   const [isFetchingUsers, setIsFetchingUsers] = useState(true);
 
   const { id } = useParams();
+  const { weekStart } = rota;
 
   // fetching users on load
   const fetchUsers = async () => {
@@ -44,7 +46,13 @@ const AdminRotaEditScreen = () => {
     const { weeklyRota } = data;
     const response = await axios.patch(
       `${process.env.REACT_APP_API}/rota/${id}`,
-      { weeklyRota }
+      { weeklyRota },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getCookie("token")}`,
+        },
+      }
     );
     if (response) {
       console.log(JSON.stringify(data));
@@ -69,19 +77,18 @@ const AdminRotaEditScreen = () => {
       <Row>
         <ToastContainer />
         <Col>
-          <h1 className="text-center my-3">Edit Rota</h1>
+          <h2 className="text-center my-3">Rota Editor</h2>
         </Col>
       </Row>
       <Row>
-        <h2 className="text-center my-3">All Rotas</h2>
         {isFetchingRota && isFetchingUsers ? (
           <Spinner />
         ) : (
           <>
-            <p>Rota for editing goes here</p>
-            {JSON.stringify(rota)}
-            <hr />
-            {JSON.stringify(users)}
+            <h3 className="my-3">
+              Edit rota for week starting on:{" "}
+              <span className="text-success mx-2">{weekStart}</span>
+            </h3>
             <RotaEditComponent
               rota={rota}
               users={users}
