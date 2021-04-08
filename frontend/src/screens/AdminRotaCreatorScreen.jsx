@@ -12,6 +12,7 @@ const AdminRotaCreatorScreen = () => {
   // state with useState hook
   const [rotas, setRotas] = useState([]);
   const [isFetchingRotas, setIsFetchingRotas] = useState(true);
+  const [newRotaAdded, setNewRotaAdded] = useState(false);
 
   const [users, setUsers] = useState([]);
   const [isFetchingUsers, setIsFetchingUsers] = useState(true);
@@ -78,7 +79,7 @@ const AdminRotaCreatorScreen = () => {
 
   useEffect(() => {
     fetchUsers();
-    fetchRotas();
+
     return () => {
       setUsers([]);
       setRotas([]);
@@ -86,8 +87,9 @@ const AdminRotaCreatorScreen = () => {
   }, []);
 
   useEffect(() => {
+    fetchRotas();
     console.log("submit Remove changed");
-  }, [submitRemove]);
+  }, [submitRemove, setNewRotaAdded]);
 
   return (
     <>
@@ -115,7 +117,10 @@ const AdminRotaCreatorScreen = () => {
         <Spinner />
       ) : (
         <Row>
-          <RotaCreatorComponent users={users} />
+          <RotaCreatorComponent
+            users={users}
+            setNewRottaAdded={setNewRotaAdded}
+          />
         </Row>
       )}
       {/* Remove Rota Modal */}

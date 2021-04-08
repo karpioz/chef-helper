@@ -7,8 +7,7 @@ import "react-toastify/dist/ReactToastify.min.css";
 
 moment.locale("en-gb");
 
-const RotaCreatorComponent = ({users}) => {
-
+const RotaCreatorComponent = ({ users, setNewRotaAdded }) => {
   const [week, setWeek] = useState([
     { dayId: "", day: "", date: "", employees: [] },
   ]);
@@ -16,31 +15,8 @@ const RotaCreatorComponent = ({users}) => {
     { weeklyRota: [{ dayId: "", day: "", date: "", employees: [] }] },
   ]);
 
+  const [rotaIsReady, setRotaIsReady] = useState(false);
   const { weeklyRota, dayId, day, date, employees } = newWeeklyRota;
-
-  // sending rota to the database
-  useEffect(() => {
-    //console.log(JSON.stringify(newWeeklyRota));
-    // axios to connect with backend
-    /* let length = Object.keys(newWeeklyRota.weeklyRota).length;
-    console.log(length);
-    if (length > 1) { */
-    axios({
-      method: "POST",
-      url: `${process.env.REACT_APP_API}/rota`,
-      data: { weeklyRota, dayId, day, date, employees },
-    })
-      .then((response) => {
-        handleResetWeek();
-        toast.success(response.data.message);
-      })
-      .catch((error) => {
-        console.log("ROTA CREATE ERROR", error.response.data);
-        setWeek({ ...week });
-        toast.error(error.response.data.error);
-      });
-    //}
-  }, [newWeeklyRota]);
 
   const handleWeekEndingDate = (e) => {
     let weekStartingDate = e.target.value;
@@ -102,8 +78,32 @@ const RotaCreatorComponent = ({users}) => {
     newRota.weeklyRota = [...week];
     console.log("weekly rota saved");
     setNewWeeklyRota(newRota);
+    setRotaIsReady(true);
   };
 
+  const submitNewRota = () => {
+    axios({
+      method: "POST",
+      url: `${process.env.REACT_APP_API}/rota`,
+      data: { weeklyRota, dayId, day, date, employees },
+    })
+      .then((response) => {
+        handleResetWeek();
+        toast.success("New Rota Created");
+        setRotaIsReady(false);
+      })
+      .catch((error) => {
+        /* console.log("ROTA CREATE ERROR", error.response.data); */
+        setWeek({ ...week });
+        /* toast.error(error.response.data.error); */
+      });
+  };
+
+  useEffect(() => {
+    if (rotaIsReady) {
+      submitNewRota();
+    }
+  }, [rotaIsReady]);
   return (
     <Form onSubmit={handleRotaSubmit}>
       <ToastContainer />

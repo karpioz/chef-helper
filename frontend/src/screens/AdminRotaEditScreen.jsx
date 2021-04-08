@@ -18,6 +18,8 @@ const AdminRotaEditScreen = () => {
   const { id } = useParams();
   const { weekStart } = rota;
 
+  const [editedRotaSubmitted, setEditedRotaSubmitted] = useState(false);
+
   // fetching users on load
   const fetchUsers = async () => {
     const response = await axios.get(`${process.env.REACT_APP_API}/users/`);
@@ -57,6 +59,7 @@ const AdminRotaEditScreen = () => {
     if (response) {
       console.log(JSON.stringify(data));
       toast.success(response.data.message);
+      setEditedRotaSubmitted(true);
     } else {
       //console.log("ROTA UPDATE ERROR", error.response.data);
       toast.error(response.data.error);
@@ -71,6 +74,11 @@ const AdminRotaEditScreen = () => {
       setRota([]);
     };
   }, []);
+
+  useEffect(() => {
+    fetchUsers();
+    fetchRotaById();
+  }, [editedRotaSubmitted]);
 
   return (
     <>

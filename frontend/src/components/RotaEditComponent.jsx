@@ -198,7 +198,6 @@ const RotaEditComponent = ({ users, rota, submitEditedRota }) => {
                       {day.employees.length - 1 === i && (
                         <Button
                           className="mx-1"
-                          block
                           disabled={
                             emp.nameId.length === 0 ||
                             emp.start.length === 0 ||
@@ -209,19 +208,18 @@ const RotaEditComponent = ({ users, rota, submitEditedRota }) => {
                           onClick={() => handleAddEmployee(day.dayId)}
                           variant="success"
                         >
-                          <i className="fas fa-plus"></i>
+                          <i class="fas fa-user-plus"></i>
                         </Button>
                       )}
                     </Form.Group>
                     <Form.Group>
                       <Button
                         className="mx-1"
-                        block
                         disabled={day.employees.length === 1 ? true : false}
                         onClick={() => handleRemoveEmployee(day.dayId, i)}
                         variant="danger"
                       >
-                        <i className="fas fa-minus"></i>
+                        <i class="fas fa-user-minus"></i>
                       </Button>
                     </Form.Group>
                   </Form.Row>
