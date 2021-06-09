@@ -27,13 +27,7 @@ const AdminScreen = () => {
     healthLabels: [],
     image: "",
     ingredientLines: [],
-    ingredients: [
-      {
-        productId: "Sample Id",
-        text: "Sample Description",
-        weight: "0",
-      },
-    ],
+    ingredients: [],
   });
 
   const [isFetchingProducts, setIsFetchingProducts] = useState(true);

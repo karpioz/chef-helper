@@ -8,7 +8,11 @@ import {
   getRecipes,
   getRecipeById,
   createRecipe,
+  deleteRecipe,
 } from "../controllers/recipesController.js";
+
+// middleware
+import { protect, adminAuth } from "../middleware/authMiddleware.js";
 
 // routes
 // read all recipes data
@@ -17,5 +21,7 @@ router.get("/", getRecipes);
 router.get("/:id", getRecipeById);
 // create new recipe
 router.post("/", createRecipe);
+// delete recipe
+router.delete("/:id", protect, adminAuth, deleteRecipe);
 
 export default router;

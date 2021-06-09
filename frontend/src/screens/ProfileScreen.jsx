@@ -55,6 +55,10 @@ const ProfileScreen = () => {
   // submiting the form
   const handleSubmitUpdate = (event) => {
     event.preventDefault();
+
+    if (password !== confirmPassword)
+      return toast.error("Both passwords don't match");
+
     setFormData({ ...formData, buttonText: "Submitting" });
     // axios to connect with backend
     axios({

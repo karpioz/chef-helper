@@ -51,16 +51,21 @@ const Header = ({ history }) => {
                   <LinkContainer
                     to={isAuth().role === "admin" ? "/admin" : "/profile"}
                   >
-                    <NavDropdown.Item>Profile</NavDropdown.Item>
+                    <NavDropdown.Item>
+                      {isAuth().role === "admin" ? "Admin Tools" : "Profile"}
+                    </NavDropdown.Item>
                   </LinkContainer>
                   {isAuth().role === "admin" ? (
-                      <>
-                    <LinkContainer to={"/admin/users"}>
-                      <NavDropdown.Item>Users</NavDropdown.Item>
-                    </LinkContainer>
-                    <LinkContainer to={"/admin/rota"}>
-                      <NavDropdown.Item>Rota Creator</NavDropdown.Item>
-                    </LinkContainer>
+                    <>
+                      <LinkContainer to={"/admin/users"}>
+                        <NavDropdown.Item>Users</NavDropdown.Item>
+                      </LinkContainer>
+                      <LinkContainer to={"/admin/rota"}>
+                        <NavDropdown.Item>Rota Tools</NavDropdown.Item>
+                      </LinkContainer>
+                      <LinkContainer to={"/admin/recipe"}>
+                        <NavDropdown.Item>Recipes Tools</NavDropdown.Item>
+                      </LinkContainer>
                     </>
                   ) : null}
                   <NavDropdown.Item
