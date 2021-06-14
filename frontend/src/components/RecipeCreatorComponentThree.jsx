@@ -1,24 +1,24 @@
 import React from "react";
-import { Form, Button, Col, Spinner } from "react-bootstrap";
+import { Form, Button, Col, Spinner, Row } from "react-bootstrap";
 
 const RecipeCreatorComponent = ({
   handleRecipeSubmit,
   handleRecipeCreatorInputChange,
   recipeCreatorData,
-  handleIngredientLines,
-  handleChangeProduct,
+  handleChangeProductNew,
   products,
-  handleAddIngredient,
+  handleAddIngredientNew,
   uploadFileHandler,
   uploading,
   recipeLines,
+  handleIngredientLineChangeNew,
 }) => {
   const { label, healthLabels, image, ingredientLines, ingredients } =
     recipeCreatorData;
   const { text, weight, productId } = recipeLines;
 
   return (
-    <Form onSubmit={handleRecipeSubmit} className="bg-warning p-2">
+    <Form as={Row} onSubmit={handleRecipeSubmit} className="bg-warning p-2">
       <Form.Row>
         <Form.Group as={Col} controlId="label">
           <Form.Label>Dish Name</Form.Label>
@@ -52,7 +52,7 @@ const RecipeCreatorComponent = ({
             value={image}
           ></Form.Control>
         </Form.Group>
-        <Form.Group as={Col} controlId="photo">
+        <Form.Group controlId="photo">
           <Form.Label>Image Upload</Form.Label>
           <Form.File
             id="image-file"
@@ -64,23 +64,25 @@ const RecipeCreatorComponent = ({
           {uploading && <Spinner />}
         </Form.Group>
       </Form.Row>
-      {ingredients.map((ingredient, i) => (
-        <>
-          <Form.Row className="bg-light align-items-center">
-            <Form.Group as={Col} xs="6">
-              <Form.Label>Recipe Line Text</Form.Label>
+      <Form.Row className="bg-light p-2 align-items-center">
+        {recipeLines.map((line, i) => (
+          <Form.Row>
+            <Form.Group as={Col}>
               <Form.Control
                 type="text"
                 value={text}
-                placeholder="Enter recipe text line"
-                onChange={handleIngredientLines("text")}
+                placeholder="Step description"
+                onChange={(e) => handleIngredientLineChangeNew(e, i)}
                 name="text"
               ></Form.Control>
             </Form.Group>
-            <Form.Group controlId="product" as={Col} xs="auto">
-              <Form.Label>Choose Product</Form.Label>
-              <Form.Control as="select" onChange={handleChangeProduct}>
-                <option>Available products:</option>
+
+            <Form.Group controlId="product">
+              <Form.Control
+                as="select"
+                onChange={(e) => handleChangeProductNew(e, i)}
+              >
+                <option>Choose Product:</option>
                 {products.length !== 0 ? (
                   products.map((product) => (
                     <option key={product._id} value={product._id}>
@@ -94,34 +96,34 @@ const RecipeCreatorComponent = ({
                 )}
               </Form.Control>
             </Form.Group>
-            <Form.Group as={Col} xs="auto">
-              <Form.Label>Weight (g)</Form.Label>
+            <Form.Group>
               <Form.Control
                 type="number"
                 name="weight"
-                placeholder="required weight"
-                onChange={handleIngredientLines("weight")}
+                placeholder="Weight (g)"
+                onChange={(e) => handleIngredientLineChangeNew(e, i)}
                 value={weight}
               ></Form.Control>
             </Form.Group>
-            <Form.Group as={Col} xs="auto">
-              <Form.Label>&nbsp;</Form.Label>
+            <Form.Group>
               <Button
-                block
                 variant="info"
-                className="my-1"
-                onClick={handleAddIngredient}
+                className="mx-1"
+                onClick={handleAddIngredientNew}
               >
                 <i className="fas fa-plus"></i>
               </Button>
             </Form.Group>
           </Form.Row>
-        </>
-      ))}
-
-      <Button variant="danger" type="submit" className="my-3">
-        Add Recipe
-      </Button>
+        ))}
+      </Form.Row>
+      <Form.Row>
+        <Form.Group>
+          <Button block variant="danger" type="submit" className="my-3">
+            Add Recipe
+          </Button>
+        </Form.Group>
+      </Form.Row>
     </Form>
   );
 };

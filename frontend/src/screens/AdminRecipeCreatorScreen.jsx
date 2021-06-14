@@ -32,18 +32,20 @@ const AdminRecipeCreatorScreen = () => {
     ingredientLines: [],
     ingredients: [
       {
-        productId: "Sample Id",
-        text: "Sample Description",
-        weight: "0",
+        productId: "",
+        text: "",
+        weight: 0,
       },
     ],
   });
 
-  const [recipeLines, setRecipeLines] = useState({
-    productId: "Sample Id",
-    text: "Sample Description",
-    weight: "0",
-  });
+  const [recipeLines, setRecipeLines] = useState([
+    {
+      productId: "Sample Id",
+      text: "Sample Description",
+      weight: 0,
+    },
+  ]);
 
   const [uploading, setUploading] = useState(false);
 
@@ -61,8 +63,9 @@ const AdminRecipeCreatorScreen = () => {
   // fetching products on load
   const fetchProducts = async () => {
     const response = await axios.get(`${process.env.REACT_APP_API}/products`);
-    console.log(response);
+    // console.log(response);
     if (response) {
+      setIsFetchingProducts(false);
       setProducts(response.data);
     } else {
       console.log("something went wrong when fetching products...");
@@ -139,7 +142,15 @@ const AdminRecipeCreatorScreen = () => {
     }
   };
 
-  const handleIngredientLines = (name) => (event) => {
+  /* const handleChangeIngredients = (e, index, idx) => {
+    const { name, value } = e.target;
+    const ingredientsArr = [...recipeCreatorData.ingredients];
+
+    ingredientsArr[index].ingredients[idx][name] = value;
+    setRecipeLines(ingredientsArr);
+  };
+
+  const handleIngredientLines = (name) => (event, index) => {
     console.log(event.target.value);
     // getting existing state and update the key with same name as function argument
     setRecipeLines((recipeLines) => ({
@@ -147,15 +158,16 @@ const AdminRecipeCreatorScreen = () => {
       [name]: event.target.value,
     }));
     console.log(recipeLines);
-  };
+  }; */
 
-  // storing product id in recipeLines state
-  const handleChangeProduct = (event) => {
+  /* // storing product id in recipeLines state
+  const handleChangeProduct = (event, index) => {
+    cons;
     setRecipeLines((recipeLines) => ({
       ...recipeLines,
       productId: event.target.value,
     }));
-  };
+  }; */
 
   // uploading image file
   const uploadFileHandler = async (event) => {
@@ -194,8 +206,14 @@ const AdminRecipeCreatorScreen = () => {
     console.log(recipeCreatorData);
   }, [recipeCreatorData]);
 
-  // adding ingredient object to the recipe's ingredients array
-  const handleAddIngredient = () => {
+  /* const handleAddEmployee = (index) => {
+    const employeesArr = [...week];
+    employeesArr[index].employees.push({ nameId: "", start: "", finish: "" });
+    setWeek(employeesArr);
+  }; */
+
+  /* // adding ingredient object to the recipe's ingredients array
+  const handleAddIngredient = (index) => {
     let recipeIngrArray = [...recipeCreatorData.ingredients];
     let ingredientLines = [...recipeCreatorData.ingredientLines];
     recipeIngrArray.push(recipeLines);
@@ -208,10 +226,39 @@ const AdminRecipeCreatorScreen = () => {
     //
     console.log(recipeLines);
     console.log("Line added");
-    setRecipeLines({ productId: "", text: "", weight: "" });
+    setRecipeLines(recipeLines, { productId: "", text: "", weight: "" });
     console.log(recipeCreatorData);
+  }; */
+
+  // ***** TESTING NEW RECIPE CREATOR ****
+
+  const handleIngredientLineChangeNew = (e, i) => {
+    //
+    const { name, value } = e.target;
+    const ingrArray = [...recipeLines];
+    ingrArray[i][name] = value;
+    setRecipeLines(ingrArray);
   };
 
+  const handleAddIngredientNew = (i) => {
+    //
+    const ingrArray = [...recipeLines];
+    ingrArray.push({ productId: "", text: "", weight: 0 });
+    console.log("line added");
+    setRecipeLines(ingrArray);
+  };
+
+  // storing product id in recipeLines state
+  const handleChangeProductNew = (e, i) => {
+    const ingrArray = [...recipeLines];
+    ingrArray[i]["productId"] = e.target.value;
+
+    setRecipeLines(ingrArray);
+  };
+
+  // ***** TESTING NEW RECIPE CREATOR ****
+  //-----------------------------------------------
+  //
   // delete recipe function
   const handleDeleteRecipe = (e) => {
     const { _id } = modalData;
@@ -254,6 +301,8 @@ const AdminRecipeCreatorScreen = () => {
       </Row>
       <Row>
         <h2 className="text-center my-3">Recipe Creator</h2>
+      </Row>
+      <Row>
         {isFetchingProducts ? (
           <Spinner />
         ) : (
@@ -261,17 +310,20 @@ const AdminRecipeCreatorScreen = () => {
             handleRecipeSubmit={handleRecipeSubmit}
             handleRecipeCreatorInputChange={handleRecipeCreatorInputChange}
             recipeCreatorData={recipeCreatorData}
-            handleIngredientLines={handleIngredientLines}
             products={products}
-            handleChangeProduct={handleChangeProduct}
-            handleAddIngredient={handleAddIngredient}
+            handleChangeProductNew={handleChangeProductNew}
+            handleAddIngredientNew={handleAddIngredientNew}
             recipeLines={recipeLines}
             setRecipeLines={setRecipeLines}
             uploading={uploading}
             uploadFileHandler={uploadFileHandler}
+            handleIngredientLineChangeNew={handleIngredientLineChangeNew}
           />
         )}
       </Row>
+      {JSON.stringify(recipeCreatorData)}
+      <hr />
+      {JSON.stringify(recipeLines)}
       {/* Remove Recipe Modal */}
       {
         <Modal show={showRemoveModal} onHide={handleClose} animation={false}>
