@@ -1,5 +1,5 @@
 import React from "react";
-import { Form, Button, Col, Spinner, Row } from "react-bootstrap";
+import { Form, Button, Col, Spinner, Row, Container } from "react-bootstrap";
 
 const RecipeCreatorComponent = ({
   handleRecipeSubmit,
@@ -12,6 +12,7 @@ const RecipeCreatorComponent = ({
   uploading,
   recipeLines,
   handleIngredientLineChangeNew,
+  handleRemoveIngredient,
 }) => {
   const { label, healthLabels, image, ingredientLines, ingredients } =
     recipeCreatorData;
@@ -64,9 +65,9 @@ const RecipeCreatorComponent = ({
           {uploading && <Spinner />}
         </Form.Group>
       </Form.Row>
-      <Form.Row className="bg-light p-2 align-items-center">
+      <Container className="bg-light p-3 align-items-center">
         {recipeLines.map((line, i) => (
-          <Form.Row>
+          <Form.Row key={i}>
             <Form.Group as={Col}>
               <Form.Control
                 type="text"
@@ -74,6 +75,7 @@ const RecipeCreatorComponent = ({
                 placeholder="Step description"
                 onChange={(e) => handleIngredientLineChangeNew(e, i)}
                 name="text"
+                required
               ></Form.Control>
             </Form.Group>
 
@@ -103,26 +105,43 @@ const RecipeCreatorComponent = ({
                 placeholder="Weight (g)"
                 onChange={(e) => handleIngredientLineChangeNew(e, i)}
                 value={weight}
+                required
               ></Form.Control>
             </Form.Group>
             <Form.Group>
               <Button
                 variant="info"
                 className="mx-1"
+                disabled={
+                  line.text.length == 0 ||
+                  line.weight == null ||
+                  line.productId == undefined
+                    ? true
+                    : false
+                }
                 onClick={handleAddIngredientNew}
               >
                 <i className="fas fa-plus"></i>
               </Button>
             </Form.Group>
+            <Form.Group>
+              <Button
+                className="mx-1"
+                disabled={recipeLines.length === 1 ? true : false}
+                onClick={() => handleRemoveIngredient(i)}
+                variant="danger"
+              >
+                <i className="fas fa-minus"></i>
+              </Button>
+            </Form.Group>
           </Form.Row>
         ))}
-      </Form.Row>
+      </Container>
       <Form.Row>
-        <Form.Group>
-          <Button block variant="danger" type="submit" className="my-3">
-            Add Recipe
-          </Button>
-        </Form.Group>
+        <hr />
+        <Button block variant="success" type="submit" className="m-2">
+          Add Recipe
+        </Button>
       </Form.Row>
     </Form>
   );

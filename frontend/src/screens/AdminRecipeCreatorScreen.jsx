@@ -34,16 +34,16 @@ const AdminRecipeCreatorScreen = () => {
       {
         productId: "",
         text: "",
-        weight: 0,
+        weight: null,
       },
     ],
   });
 
   const [recipeLines, setRecipeLines] = useState([
     {
-      productId: "Sample Id",
-      text: "Sample Description",
-      weight: 0,
+      productId: "",
+      text: "",
+      weight: null,
     },
   ]);
 
@@ -199,36 +199,12 @@ const AdminRecipeCreatorScreen = () => {
   // realtime recipe creator inputs feedback
 
   useEffect(() => {
-    console.log(recipeLines);
+    //console.log(recipeLines);
   }, [recipeLines]);
 
   useEffect(() => {
-    console.log(recipeCreatorData);
+    //console.log(recipeCreatorData);
   }, [recipeCreatorData]);
-
-  /* const handleAddEmployee = (index) => {
-    const employeesArr = [...week];
-    employeesArr[index].employees.push({ nameId: "", start: "", finish: "" });
-    setWeek(employeesArr);
-  }; */
-
-  /* // adding ingredient object to the recipe's ingredients array
-  const handleAddIngredient = (index) => {
-    let recipeIngrArray = [...recipeCreatorData.ingredients];
-    let ingredientLines = [...recipeCreatorData.ingredientLines];
-    recipeIngrArray.push(recipeLines);
-    ingredientLines.push(recipeLines.text);
-    setRecipeCreatorData({
-      ...recipeCreatorData,
-      ingredientLines,
-      ingredients: recipeIngrArray,
-    });
-    //
-    console.log(recipeLines);
-    console.log("Line added");
-    setRecipeLines(recipeLines, { productId: "", text: "", weight: "" });
-    console.log(recipeCreatorData);
-  }; */
 
   // ***** TESTING NEW RECIPE CREATOR ****
 
@@ -242,10 +218,19 @@ const AdminRecipeCreatorScreen = () => {
 
   const handleAddIngredientNew = (i) => {
     //
-    const ingrArray = [...recipeLines];
-    ingrArray.push({ productId: "", text: "", weight: 0 });
-    console.log("line added");
-    setRecipeLines(ingrArray);
+    const recipeCreatorFormIngrArray = [...recipeLines];
+    recipeCreatorFormIngrArray.push({ productId: "", text: "", weight: 0 });
+    setRecipeLines(recipeCreatorFormIngrArray);
+
+    const recipeTextLine = recipeLines.map((x) => x.text);
+    const weightField = recipeLines.map((x) => x.weight);
+    const productField = recipeLines.map((x) => x.products);
+
+    setRecipeCreatorData({
+      ...recipeCreatorData,
+      ingredientLines: recipeTextLine,
+      ingredients: recipeCreatorFormIngrArray,
+    });
   };
 
   // storing product id in recipeLines state
@@ -253,6 +238,14 @@ const AdminRecipeCreatorScreen = () => {
     const ingrArray = [...recipeLines];
     ingrArray[i]["productId"] = e.target.value;
 
+    setRecipeLines(ingrArray);
+  };
+
+  // removing ingredient input from the recipe's creator
+  const handleRemoveIngredient = (index) => {
+    const ingrArray = [...recipeLines];
+    ingrArray.splice(index, 1);
+    //console.log(`ingr Array after splice - ${ingrArray}`);
     setRecipeLines(ingrArray);
   };
 
@@ -318,6 +311,7 @@ const AdminRecipeCreatorScreen = () => {
             uploading={uploading}
             uploadFileHandler={uploadFileHandler}
             handleIngredientLineChangeNew={handleIngredientLineChangeNew}
+            handleRemoveIngredient={handleRemoveIngredient}
           />
         )}
       </Row>
