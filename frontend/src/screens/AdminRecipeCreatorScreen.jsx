@@ -142,33 +142,6 @@ const AdminRecipeCreatorScreen = () => {
     }
   };
 
-  /* const handleChangeIngredients = (e, index, idx) => {
-    const { name, value } = e.target;
-    const ingredientsArr = [...recipeCreatorData.ingredients];
-
-    ingredientsArr[index].ingredients[idx][name] = value;
-    setRecipeLines(ingredientsArr);
-  };
-
-  const handleIngredientLines = (name) => (event, index) => {
-    console.log(event.target.value);
-    // getting existing state and update the key with same name as function argument
-    setRecipeLines((recipeLines) => ({
-      ...recipeLines,
-      [name]: event.target.value,
-    }));
-    console.log(recipeLines);
-  }; */
-
-  /* // storing product id in recipeLines state
-  const handleChangeProduct = (event, index) => {
-    cons;
-    setRecipeLines((recipeLines) => ({
-      ...recipeLines,
-      productId: event.target.value,
-    }));
-  }; */
-
   // uploading image file
   const uploadFileHandler = async (event) => {
     const file = event.target.files[0];
@@ -193,6 +166,88 @@ const AdminRecipeCreatorScreen = () => {
     } catch (error) {
       console.error(error);
       setUploading(false);
+    }
+  };
+
+  // uploading image file to Cloudinary
+  const [photoInput, setPhotoInput] = useState("");
+  const [selectedPhoto, setSelectedPhoto] = useState("");
+  const [previewSource, setPreviewSource] = useState("");
+
+  const handlePhotoInputChange = (e) => {
+    const photo = e.target.files[0];
+    // previewing uploaded photo
+    previewPhoto(photo);
+  };
+
+  const previewPhoto = (photo) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(photo);
+    reader.onloadend = () => {
+      setPreviewSource(reader.result);
+      uploadRecipePhoto(reader.result);
+    };
+  };
+
+  const uploadRecipePhoto = async (base64EncodedImage) => {
+    //
+    try {
+      const data = await fetch(
+        `${process.env.REACT_APP_API}/upload/cloudinary`,
+        {
+          method: "POST",
+          body: JSON.stringify({ data: base64EncodedImage }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      const response = await data.json();
+      toast.success(response.msg);
+      console.log(response.imgData);
+
+      setRecipeCreatorData({
+        ...recipeCreatorData,
+        image: response.imgData.secure_url,
+      });
+      setUploading(false);
+    } catch (error) {
+      console.error(error);
+      setUploading(false);
+    }
+  };
+
+  // remove photo from Cloudinary
+  const deleteRecipePhoto = async () => {
+    // extracting public id of the photo to delete from the url address stored in the state
+    let public_id = recipeCreatorData.image.split("/");
+    public_id = public_id[7].substring(0, 20);
+
+    console.log(public_id);
+    //
+    try {
+      const data = await fetch(
+        `${process.env.REACT_APP_API}/upload/cloudinary/destroy`,
+        {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ public_id }),
+        }
+      );
+      const response = await data.json();
+      setPreviewSource("");
+      console.log(response);
+      toast.success(response.msg);
+
+      setRecipeCreatorData({
+        ...recipeCreatorData,
+        image: "",
+      });
+    } catch (error) {
+      console.error(error);
     }
   };
 
@@ -312,6 +367,11 @@ const AdminRecipeCreatorScreen = () => {
             uploadFileHandler={uploadFileHandler}
             handleIngredientLineChangeNew={handleIngredientLineChangeNew}
             handleRemoveIngredient={handleRemoveIngredient}
+            handlePhotoInputChange={handlePhotoInputChange}
+            photoInput={photoInput}
+            selectedPhoto={selectedPhoto}
+            previewSource={previewSource}
+            deleteRecipePhoto={deleteRecipePhoto}
           />
         )}
       </Row>

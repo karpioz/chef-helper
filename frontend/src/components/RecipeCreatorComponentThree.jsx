@@ -1,5 +1,14 @@
 import React from "react";
-import { Form, Button, Col, Spinner, Row, Container } from "react-bootstrap";
+import {
+  Form,
+  Button,
+  Col,
+  Spinner,
+  Row,
+  Container,
+  Image,
+  Badge,
+} from "react-bootstrap";
 
 const RecipeCreatorComponent = ({
   handleRecipeSubmit,
@@ -13,6 +22,11 @@ const RecipeCreatorComponent = ({
   recipeLines,
   handleIngredientLineChangeNew,
   handleRemoveIngredient,
+  handlePhotoInputChange,
+  photoInput,
+  selectedPhoto,
+  previewSource,
+  deleteRecipePhoto,
 }) => {
   const { label, healthLabels, image, ingredientLines, ingredients } =
     recipeCreatorData;
@@ -43,17 +57,56 @@ const RecipeCreatorComponent = ({
         </Form.Group>
       </Form.Row>
       <Form.Row>
-        <Form.Group as={Col} controlId="image">
-          <Form.Label>Paste Image URL</Form.Label>
-          <Form.Control
-            type="text"
-            placeholder="Please paste url for image file"
-            onChange={handleRecipeCreatorInputChange("image")}
-            name="image"
-            value={image}
-          ></Form.Control>
+        <Col xs="auto">
+          <Form.Group controlId="image">
+            <Form.Label>Paste Image URL</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="Please paste url for image file"
+              onChange={handleRecipeCreatorInputChange("image")}
+              name="image"
+              value={image}
+            ></Form.Control>
+          </Form.Group>
+        </Col>
+        <Col xs="auto">
+          <Form.Group controlId="photo">
+            <Form.Label>Photo Upload</Form.Label>
+            <Form.File
+              id="image-file"
+              label="Choose File"
+              type="file"
+              custom
+              onChange={handlePhotoInputChange}
+              name="image"
+              value={photoInput}
+            ></Form.File>
+            {uploading && <Spinner />}
+          </Form.Group>
+        </Col>
+
+        <Form.Group>
+          <Image
+            src={
+              previewSource
+                ? `${previewSource}`
+                : "https://dummyimage.com/100x100/000/fff"
+            }
+            thumbnail
+            style={{ height: "100px", width: "100px" }}
+          />
+          {previewSource && (
+            <Badge
+              className="img-upload-delete-badge"
+              pill
+              variant="danger"
+              onClick={deleteRecipePhoto}
+            >
+              X
+            </Badge>
+          )}
         </Form.Group>
-        <Form.Group controlId="photo">
+        {/* <Form.Group controlId="photo">
           <Form.Label>Image Upload</Form.Label>
           <Form.File
             id="image-file"
@@ -63,7 +116,7 @@ const RecipeCreatorComponent = ({
             name="image"
           ></Form.File>
           {uploading && <Spinner />}
-        </Form.Group>
+        </Form.Group> */}
       </Form.Row>
       <Container className="bg-light p-3 align-items-center">
         {recipeLines.map((line, i) => (

@@ -17,12 +17,15 @@ connectDB();
 import authRoutes from "./routes/authRoutes.js";
 import rotaRoutes from "./routes/rotaRoutes.js";
 import recipesRoutes from "./routes/recipesRoutes.js";
+import recipesRoutesWithImage from "./routes/recipesRoutesWithImage.js";
 import productsRoutes from "./routes/productsRoutes.js";
 import tasksRoutes from "./routes/tasksRoutes.js";
 import uploadRoutes from "./routes/uploadRoutes.js";
+import uploadRoutesCloudinary from "./routes/uploadRoutesCloudinary.js";
 
 const app = express();
-app.use(express.json());
+app.use(express.json({ limit: "50mb" }));
+app.use(express.urlencoded({ limit: "50mb", extended: true }));
 
 // apps middlewares
 
@@ -37,10 +40,12 @@ if (process.env.NODE_ENV == "development") {
 // middleware
 app.use("/api", authRoutes);
 app.use("/api/recipes", recipesRoutes);
+app.use("/api/recipes/v2", recipesRoutesWithImage);
 app.use("/api/rota", rotaRoutes);
 app.use("/api/products", productsRoutes);
 app.use("/api/tasks", tasksRoutes);
 app.use("/api/upload", uploadRoutes);
+app.use("/api/upload/cloudinary", uploadRoutesCloudinary);
 
 // making uploads folder accessible for browser
 const folder = path.resolve();
