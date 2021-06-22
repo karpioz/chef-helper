@@ -27,13 +27,20 @@ const RecipeCreatorComponent = ({
   selectedPhoto,
   previewSource,
   deleteRecipePhoto,
+  isUpdatingRecipe,
+  handleRecipeUpdateSubmit,
 }) => {
   const { label, healthLabels, image, ingredientLines, ingredients } =
     recipeCreatorData;
-  const { text, weight, productId } = recipeLines;
 
   return (
-    <Form as={Row} onSubmit={handleRecipeSubmit} className="bg-warning p-2">
+    <Form
+      onSubmit={
+        !isUpdatingRecipe ? handleRecipeSubmit : handleRecipeUpdateSubmit
+      }
+      className="p-3"
+      style={{ backgroundColor: "#F2F2F2" }}
+    >
       <Form.Row>
         <Form.Group as={Col} controlId="label">
           <Form.Label>Dish Name</Form.Label>
@@ -43,6 +50,7 @@ const RecipeCreatorComponent = ({
             placeholder="Dish Name"
             name="label"
             value={label}
+            required
           ></Form.Control>
         </Form.Group>
         <Form.Group as={Col} controlId="healthLabels">
@@ -85,47 +93,31 @@ const RecipeCreatorComponent = ({
           </Form.Group>
         </Col>
 
-        <Form.Group>
+        <Col xs="auto">
           <Image
-            src={
-              previewSource
-                ? `${previewSource}`
-                : "https://dummyimage.com/100x100/000/fff"
-            }
+            src={previewSource ? `${previewSource}` : image}
             thumbnail
-            style={{ height: "100px", width: "100px" }}
+            style={{ height: "125px", width: "125px" }}
           />
           {previewSource && (
             <Badge
-              className="img-upload-delete-badge"
+              className="img-upload-delete-badge p-1"
               pill
               variant="danger"
               onClick={deleteRecipePhoto}
             >
-              X
+              <i className="fas fa-trash"></i>
             </Badge>
           )}
-        </Form.Group>
-        {/* <Form.Group controlId="photo">
-          <Form.Label>Image Upload</Form.Label>
-          <Form.File
-            id="image-file"
-            label="Choose File"
-            custom
-            onChange={uploadFileHandler}
-            name="image"
-          ></Form.File>
-          {uploading && <Spinner />}
-        </Form.Group> */}
+        </Col>
       </Form.Row>
       <Container className="bg-light p-3 align-items-center">
-        {recipeLines.map((line, i) => (
+        {recipeCreatorData.ingredients.map((line, i) => (
           <Form.Row key={i}>
             <Form.Group as={Col}>
               <Form.Control
                 type="text"
-                value={text}
-                placeholder="Step description"
+                value={line.text}
                 onChange={(e) => handleIngredientLineChangeNew(e, i)}
                 name="text"
                 required
@@ -155,15 +147,14 @@ const RecipeCreatorComponent = ({
               <Form.Control
                 type="number"
                 name="weight"
-                placeholder="Weight (g)"
                 onChange={(e) => handleIngredientLineChangeNew(e, i)}
-                value={weight}
+                value={line.weight}
                 required
               ></Form.Control>
             </Form.Group>
             <Form.Group>
               <Button
-                variant="info"
+                variant="dark"
                 className="mx-1"
                 disabled={
                   line.text.length == 0 ||
@@ -180,7 +171,9 @@ const RecipeCreatorComponent = ({
             <Form.Group>
               <Button
                 className="mx-1"
-                disabled={recipeLines.length === 1 ? true : false}
+                disabled={
+                  recipeCreatorData.ingredients.length === 1 ? true : false
+                }
                 onClick={() => handleRemoveIngredient(i)}
                 variant="danger"
               >
@@ -189,13 +182,17 @@ const RecipeCreatorComponent = ({
             </Form.Group>
           </Form.Row>
         ))}
-      </Container>
-      <Form.Row>
         <hr />
-        <Button block variant="success" type="submit" className="m-2">
-          Add Recipe
-        </Button>
-      </Form.Row>
+        {isUpdatingRecipe ? (
+          <Button variant="warning" type="submit" className="m-2">
+            Update Recipe
+          </Button>
+        ) : (
+          <Button variant="success" type="submit" className="m-2">
+            Add Recipe
+          </Button>
+        )}
+      </Container>
     </Form>
   );
 };

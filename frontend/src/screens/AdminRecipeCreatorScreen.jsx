@@ -1,5 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { Row, Col, Modal, Spinner, Button, Form } from "react-bootstrap";
+import {
+  Row,
+  Col,
+  Modal,
+  Spinner,
+  Button,
+  Form,
+  Container,
+} from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
@@ -25,10 +33,11 @@ const AdminRecipeCreatorScreen = () => {
   const handleCloseRemoveModal = () => setShowRemoveModal(false);
   const handleClose = () => setShow(false);
 
+  // Recipe starting empty state
   const [recipeCreatorData, setRecipeCreatorData] = useState({
     label: "",
     healthLabels: [],
-    image: "",
+    image: "https://dummyimage.com/125x125/ccc/000",
     ingredientLines: [],
     ingredients: [
       {
@@ -39,6 +48,7 @@ const AdminRecipeCreatorScreen = () => {
     ],
   });
 
+  // Recipe's ingredient lines array state
   const [recipeLines, setRecipeLines] = useState([
     {
       productId: "",
@@ -47,12 +57,14 @@ const AdminRecipeCreatorScreen = () => {
     },
   ]);
 
+  // Uploading photo state
   const [uploading, setUploading] = useState(false);
 
-  // Destructuring State
+  // Destructuring recipe's state
   const { label, healthLabels, image, ingredientLines, ingredients } =
     recipeCreatorData;
 
+  // Displaying Modal Screen to delete recipe
   const handleShowRemoveModal = (id) => {
     setModalData(() => recipes.find((recipe) => recipe._id === id));
     setShowRemoveModal(true);
@@ -84,6 +96,7 @@ const AdminRecipeCreatorScreen = () => {
     }
   };
 
+  // Fetching products on load and storing them in the state for use in the recipe creator
   useEffect(() => {
     fetchProducts();
     return () => {
@@ -91,6 +104,7 @@ const AdminRecipeCreatorScreen = () => {
     };
   }, []);
 
+  // Fetching all recipes on first page load, after delete and after update
   useEffect(() => {
     fetchRecipes();
   }, [submitRemove, setNewRecipeAdded]);
@@ -98,6 +112,7 @@ const AdminRecipeCreatorScreen = () => {
   // *** handling recipe creator ***
   // submiting completed recipe to database
   const handleRecipeSubmit = (e) => {
+    console.log("clicked add recipe");
     e.preventDefault();
     // axios to connect with backend
     axios({
@@ -110,10 +125,18 @@ const AdminRecipeCreatorScreen = () => {
           ...recipeCreatorData,
           label: "",
           healthLabels: [],
-          image: "",
+          image: "https://dummyimage.com/125x125/ccc/000",
           ingredientLines: [],
           ingredients: [],
         });
+        setRecipeLines([
+          {
+            productId: "",
+            text: "",
+            weight: null,
+          },
+        ]);
+        setPreviewSource("");
         toast.success(response.data.message);
       })
       .catch((error) => {
@@ -142,7 +165,7 @@ const AdminRecipeCreatorScreen = () => {
     }
   };
 
-  // uploading image file
+  // uploading image file and store on the server - not used anymore due to change for storage images in the cloudinary service
   const uploadFileHandler = async (event) => {
     const file = event.target.files[0];
     const formData = new FormData();
@@ -174,6 +197,11 @@ const AdminRecipeCreatorScreen = () => {
   const [selectedPhoto, setSelectedPhoto] = useState("");
   const [previewSource, setPreviewSource] = useState("");
 
+  // image file type validation function
+  const isImage = (file) => {
+    return !!file.type.match("image.*");
+  };
+
   const handlePhotoInputChange = (e) => {
     const photo = e.target.files[0];
     // previewing uploaded photo
@@ -183,10 +211,16 @@ const AdminRecipeCreatorScreen = () => {
   const previewPhoto = (photo) => {
     const reader = new FileReader();
     reader.readAsDataURL(photo);
-    reader.onloadend = () => {
-      setPreviewSource(reader.result);
-      uploadRecipePhoto(reader.result);
-    };
+
+    // validation by checking file type of uploaded file
+    if (!isImage(photo)) {
+      toast.error("Please choose image / photo file");
+    } else {
+      reader.onloadend = () => {
+        setPreviewSource(reader.result);
+        uploadRecipePhoto(reader.result);
+      };
+    }
   };
 
   const uploadRecipePhoto = async (base64EncodedImage) => {
@@ -244,22 +278,12 @@ const AdminRecipeCreatorScreen = () => {
 
       setRecipeCreatorData({
         ...recipeCreatorData,
-        image: "",
+        image: "https://dummyimage.com/125x125/ccc/000",
       });
     } catch (error) {
       console.error(error);
     }
   };
-
-  // realtime recipe creator inputs feedback
-
-  useEffect(() => {
-    //console.log(recipeLines);
-  }, [recipeLines]);
-
-  useEffect(() => {
-    //console.log(recipeCreatorData);
-  }, [recipeCreatorData]);
 
   // ***** TESTING NEW RECIPE CREATOR ****
 
@@ -278,8 +302,8 @@ const AdminRecipeCreatorScreen = () => {
     setRecipeLines(recipeCreatorFormIngrArray);
 
     const recipeTextLine = recipeLines.map((x) => x.text);
-    const weightField = recipeLines.map((x) => x.weight);
-    const productField = recipeLines.map((x) => x.products);
+    /* const weightField = recipeLines.map((x) => x.weight);
+    const productField = recipeLines.map((x) => x.products); */
 
     setRecipeCreatorData({
       ...recipeCreatorData,
@@ -307,6 +331,7 @@ const AdminRecipeCreatorScreen = () => {
   // ***** TESTING NEW RECIPE CREATOR ****
   //-----------------------------------------------
   //
+
   // delete recipe function
   const handleDeleteRecipe = (e) => {
     const { _id } = modalData;
@@ -324,84 +349,146 @@ const AdminRecipeCreatorScreen = () => {
       setRecipes(recipes.filter((recipe) => recipe._id !== _id));
       setSubmitRemove(true);
     });
-    //closing modal
+    //closing modal window
     handleCloseRemoveModal();
   };
 
+  // RECIPE UPDATE
+  const [isUpdatingRecipe, setIsUpdatingRecipe] = useState(false);
+  const [recipeToUpdateData, setRecipeToUpdateData] = useState("");
+  // fetching single recipe with id from url
+  const fetchRecipeToUpdate = async (id) => {
+    const { data } = await axios.get(
+      `${process.env.REACT_APP_API}/recipes/update/${id}`
+    );
+    // storing fetched recipe data in the state
+    setRecipeToUpdateData(data);
+
+    // copying that data to recipe creator state to populate it in the form
+    const recipeCreatorFormIngrArray = await [...data.ingredients];
+    setRecipeLines(recipeCreatorFormIngrArray);
+
+    const recipeCreatorDataToUpdate = await {
+      label: data.label,
+      healthLabels: [...data.healthLabels],
+      image: data.image,
+      ingredientLines: [...data.ingredientLines],
+      ingredients: [...data.ingredients],
+    };
+
+    setRecipeCreatorData(recipeCreatorDataToUpdate);
+  };
+  // update recipe after click on it
+  const handleClickUpdate = (id) => {
+    //
+    console.log(id);
+    fetchRecipeToUpdate(id);
+    setIsUpdatingRecipe(true);
+  };
+
+  // submit updated recipe
+  const handleRecipeUpdateSubmit = (e) => {
+    e.preventDefault();
+    console.log("update submitted");
+  };
+
+  // realtime recipe creator inputs feedback
+
+  useEffect(() => {
+    //console.log(recipeLines);
+  }, [recipeLines, isUpdatingRecipe, recipeCreatorData]);
+
+  /* useEffect(() => {
+    //console.log(recipeCreatorData);
+  }, [recipeCreatorData]); */
+
   return (
     <>
-      <Row>
-        <ToastContainer />
-        <Col>
-          <h1 className="text-center my-3">Recipes Management</h1>
-        </Col>
-      </Row>
-      <Row>
-        <h2 className="text-center my-3">All Recipes</h2>
-        {isFetchingRecipes ? (
-          <Spinner />
-        ) : (
-          <AllRecipesTableComponent
-            recipes={recipes}
-            handleShowRemoveModal={handleShowRemoveModal}
-          />
-        )}
-      </Row>
-      <Row>
-        <h2 className="text-center my-3">Recipe Creator</h2>
-      </Row>
-      <Row>
-        {isFetchingProducts ? (
-          <Spinner />
-        ) : (
-          <RecipeCreatorComponent
-            handleRecipeSubmit={handleRecipeSubmit}
-            handleRecipeCreatorInputChange={handleRecipeCreatorInputChange}
-            recipeCreatorData={recipeCreatorData}
-            products={products}
-            handleChangeProductNew={handleChangeProductNew}
-            handleAddIngredientNew={handleAddIngredientNew}
-            recipeLines={recipeLines}
-            setRecipeLines={setRecipeLines}
-            uploading={uploading}
-            uploadFileHandler={uploadFileHandler}
-            handleIngredientLineChangeNew={handleIngredientLineChangeNew}
-            handleRemoveIngredient={handleRemoveIngredient}
-            handlePhotoInputChange={handlePhotoInputChange}
-            photoInput={photoInput}
-            selectedPhoto={selectedPhoto}
-            previewSource={previewSource}
-            deleteRecipePhoto={deleteRecipePhoto}
-          />
-        )}
-      </Row>
-      {JSON.stringify(recipeCreatorData)}
-      <hr />
-      {JSON.stringify(recipeLines)}
-      {/* Remove Recipe Modal */}
-      {
-        <Modal show={showRemoveModal} onHide={handleClose} animation={false}>
-          <Modal.Header closeButton>
-            <Modal.Title>Please Confirm Removal</Modal.Title>
-          </Modal.Header>
-          <Form onSubmit={handleDeleteRecipe}>
-            <Modal.Body>
-              <h3>
-                Recipe for{" "}
-                <span className="text-danger">{modalData.label}</span>
-              </h3>
-            </Modal.Body>
-            <Modal.Footer>
-              <Button variant="warning" onClick={handleCloseRemoveModal}>
-                Cancel
-              </Button>
-              <Button variant="danger" type="submit">
-                Delete
-              </Button>
-            </Modal.Footer>
-          </Form>
-        </Modal>
-      }
+      <Container>
+        <Row>
+          <ToastContainer />
+          <Col>
+            <h1 className="text-center my-3">Recipes Management</h1>
+          </Col>
+        </Row>
+        <Row>
+          <h2 className="text-center my-3">All Recipes</h2>
+          {isFetchingRecipes ? (
+            <Spinner />
+          ) : (
+            <AllRecipesTableComponent
+              recipes={recipes}
+              handleShowRemoveModal={handleShowRemoveModal}
+              handleClickUpdate={handleClickUpdate}
+            />
+          )}
+        </Row>
+        <Row>
+          <Col>
+            <h2 className="my-3 text-center">Recipe Creator</h2>
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+            {isFetchingProducts ? (
+              <Spinner />
+            ) : (
+              <RecipeCreatorComponent
+                handleRecipeSubmit={handleRecipeSubmit}
+                handleRecipeCreatorInputChange={handleRecipeCreatorInputChange}
+                recipeCreatorData={recipeCreatorData}
+                products={products}
+                handleChangeProductNew={handleChangeProductNew}
+                handleAddIngredientNew={handleAddIngredientNew}
+                recipeLines={recipeLines}
+                setRecipeLines={setRecipeLines}
+                uploading={uploading}
+                uploadFileHandler={uploadFileHandler}
+                handleIngredientLineChangeNew={handleIngredientLineChangeNew}
+                handleRemoveIngredient={handleRemoveIngredient}
+                handlePhotoInputChange={handlePhotoInputChange}
+                photoInput={photoInput}
+                selectedPhoto={selectedPhoto}
+                previewSource={previewSource}
+                deleteRecipePhoto={deleteRecipePhoto}
+                isUpdatingRecipe={isUpdatingRecipe}
+                handleRecipeUpdateSubmit={handleRecipeUpdateSubmit}
+              />
+            )}
+          </Col>
+        </Row>
+
+        <hr />
+        {JSON.stringify(recipeCreatorData)}
+        <hr />
+        {JSON.stringify(recipeLines)}
+        <hr />
+        {JSON.stringify(recipeToUpdateData)}
+        {/* Remove Recipe Modal */}
+        {
+          <Modal show={showRemoveModal} onHide={handleClose} animation={false}>
+            <Modal.Header closeButton>
+              <Modal.Title>Please Confirm Removal</Modal.Title>
+            </Modal.Header>
+            <Form onSubmit={handleDeleteRecipe}>
+              <Modal.Body>
+                <h3>
+                  Recipe for{" "}
+                  <span className="text-danger">{modalData.label}</span>
+                </h3>
+              </Modal.Body>
+              <Modal.Footer>
+                <Button variant="warning" onClick={handleCloseRemoveModal}>
+                  Cancel
+                </Button>
+                <Button variant="danger" type="submit">
+                  Delete
+                </Button>
+              </Modal.Footer>
+            </Form>
+          </Modal>
+        }
+      </Container>
     </>
   );
 };

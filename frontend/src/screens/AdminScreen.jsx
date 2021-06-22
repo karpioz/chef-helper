@@ -404,7 +404,7 @@ const AdminScreen = () => {
           </Form>
         </Col>
       </Row>
-      <Row className="my-3">
+      {/* <Row className="my-3">
         <Col>
           <h2>Recipe Creator</h2>
 
@@ -428,7 +428,7 @@ const AdminScreen = () => {
             />
           )}
         </Col>
-      </Row>
+      </Row> */}
     </>
   );
 };

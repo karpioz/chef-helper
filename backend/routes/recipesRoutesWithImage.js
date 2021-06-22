@@ -19,6 +19,8 @@ import { protect, adminAuth } from "../middleware/authMiddleware.js";
 router.get("/", getRecipes);
 // read specific recipe data
 router.get("/:id", getRecipeById);
+// read specific recipe data to update
+//router.get("/update/:id", getRecipeToUpdateById);
 // create new recipe
 router.post("/", createRecipe);
 // delete recipe

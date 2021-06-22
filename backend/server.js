@@ -40,7 +40,7 @@ if (process.env.NODE_ENV == "development") {
 // middleware
 app.use("/api", authRoutes);
 app.use("/api/recipes", recipesRoutes);
-app.use("/api/recipes/v2", recipesRoutesWithImage);
+//app.use("/api/recipes/v2", recipesRoutesWithImage);
 app.use("/api/rota", rotaRoutes);
 app.use("/api/products", productsRoutes);
 app.use("/api/tasks", tasksRoutes);

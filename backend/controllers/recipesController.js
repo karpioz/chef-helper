@@ -82,4 +82,24 @@ const deleteRecipe = asyncHandler(async (req, res) => {
   } catch (error) {}
 });
 
-export { getRecipes, getRecipeById, createRecipe, deleteRecipe };
+// @desc fetch single recipe to update
+// @route GET /api/recipes/update/:id
+// @access Public
+const getRecipeToUpdateById = asyncHandler(async (req, res) => {
+  const recipe = await Recipe.findById(req.params.id);
+  if (recipe) {
+    res.json(recipe);
+  } else {
+    res.status(404);
+    console.log(err.message);
+    //throw new Error('recipe not found')
+  }
+});
+
+export {
+  getRecipes,
+  getRecipeById,
+  getRecipeToUpdateById,
+  createRecipe,
+  deleteRecipe,
+};
