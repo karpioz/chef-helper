@@ -10,6 +10,7 @@ import {
   getRecipeToUpdateById,
   createRecipe,
   deleteRecipe,
+  updateRecipe,
 } from "../controllers/recipesController.js";
 
 // middleware
@@ -26,5 +27,7 @@ router.get("/update/:id", getRecipeToUpdateById);
 router.post("/", createRecipe);
 // delete recipe
 router.delete("/:id", protect, adminAuth, deleteRecipe);
+// update recipe
+router.patch("/update/:id", updateRecipe);
 
 export default router;

@@ -254,17 +254,6 @@ const AdminRecipeCreatorScreen = () => {
   // remove photo from Cloudinary
   const deleteRecipePhoto = async () => {
     // extracting public id of the photo to delete from the url address stored in the state
-    if (
-      !recipeCreatorData.image.includes(
-        "https://res.cloudinary.com/uws-student/image/upload/"
-      )
-    ) {
-      toast.error(
-        "Image file is just link from internet. Cannot delete that. Please Overwrite link or upload new photo."
-      );
-      return;
-    }
-
     let public_id = recipeCreatorData.image.split("/");
     public_id = public_id[7].substring(0, 20);
 
@@ -284,6 +273,7 @@ const AdminRecipeCreatorScreen = () => {
       );
       const response = await data.json();
       setPreviewSource("");
+      console.log(response);
       toast.success(response.msg);
 
       setRecipeCreatorData({
@@ -300,21 +290,20 @@ const AdminRecipeCreatorScreen = () => {
   const handleIngredientLineChangeNew = (e, i) => {
     //
     const { name, value } = e.target;
-    const ingrArray = [...recipeCreatorData.ingredients];
+    const ingrArray = [...recipeLines];
     ingrArray[i][name] = value;
-    setRecipeCreatorData({ ...recipeCreatorData, ingredients: ingrArray });
+    setRecipeLines(ingrArray);
   };
 
   const handleAddIngredientNew = (i) => {
     //
-    const recipeCreatorFormIngrArray = [...recipeCreatorData.ingredients];
+    const recipeCreatorFormIngrArray = [...recipeLines];
     recipeCreatorFormIngrArray.push({ productId: "", text: "", weight: 0 });
-    setRecipeCreatorData({
-      ...recipeCreatorData,
-      ingredients: recipeCreatorFormIngrArray,
-    });
+    setRecipeLines(recipeCreatorFormIngrArray);
 
-    const recipeTextLine = recipeCreatorData.ingredients.map((x) => x.text);
+    const recipeTextLine = recipeLines.map((x) => x.text);
+    /* const weightField = recipeLines.map((x) => x.weight);
+    const productField = recipeLines.map((x) => x.products); */
 
     setRecipeCreatorData({
       ...recipeCreatorData,
@@ -325,24 +314,18 @@ const AdminRecipeCreatorScreen = () => {
 
   // storing product id in recipeLines state
   const handleChangeProductNew = (e, i) => {
-    const ingrArray = [...recipeCreatorData.ingredients];
+    const ingrArray = [...recipeLines];
     ingrArray[i]["productId"] = e.target.value;
 
-    setRecipeCreatorData({
-      ...recipeCreatorData,
-      ingredients: ingrArray,
-    });
+    setRecipeLines(ingrArray);
   };
 
   // removing ingredient input from the recipe's creator
   const handleRemoveIngredient = (index) => {
-    const ingrArray = [...recipeCreatorData.ingredients];
+    const ingrArray = [...recipeLines];
     ingrArray.splice(index, 1);
     //console.log(`ingr Array after splice - ${ingrArray}`);
-    setRecipeCreatorData({
-      ...recipeCreatorData,
-      ingredients: ingrArray,
-    });
+    setRecipeLines(ingrArray);
   };
 
   // ***** TESTING NEW RECIPE CREATOR ****
@@ -373,7 +356,6 @@ const AdminRecipeCreatorScreen = () => {
   // RECIPE UPDATE
   const [isUpdatingRecipe, setIsUpdatingRecipe] = useState(false);
   const [recipeToUpdateData, setRecipeToUpdateData] = useState("");
-  const [recipeIdToUpdate, setRecipeIdToUpdate] = useState("");
   // fetching single recipe with id from url
   const fetchRecipeToUpdate = async (id) => {
     const { data } = await axios.get(
@@ -402,49 +384,23 @@ const AdminRecipeCreatorScreen = () => {
     console.log(id);
     fetchRecipeToUpdate(id);
     setIsUpdatingRecipe(true);
-    setRecipeIdToUpdate(id);
   };
 
   // submit updated recipe
-  const handleRecipeUpdateSubmit = async (e) => {
+  const handleRecipeUpdateSubmit = (e) => {
     e.preventDefault();
-    const response = await axios.patch(
-      `${process.env.REACT_APP_API}/recipes/update/${recipeIdToUpdate}`,
-      { label, healthLabels, image, ingredientLines, ingredients },
-      {
-        headers: {
-          "Content-Type": "application/json",
-          /* Authorization: `Bearer ${getCookie("token")}`, */
-        },
-      }
-    );
-    if (response) {
-      toast.success(response.data.message);
-      setPreviewSource("");
-      setRecipeCreatorData({
-        label: "",
-        healthLabels: [],
-        image: "https://dummyimage.com/125x125/ccc/000",
-        ingredientLines: [],
-        ingredients: [
-          {
-            productId: "",
-            text: "",
-            weight: null,
-          },
-        ],
-      });
-      setIsUpdatingRecipe(false);
-      console.log("recipe update submitted");
-    } else {
-      //console.log("RECIPE UPDATE ERROR", error.response.data);
-      toast.error(response.data.error);
-    }
+    console.log("update submitted");
   };
 
   // realtime recipe creator inputs feedback
 
-  useEffect(() => {}, [isUpdatingRecipe, recipeCreatorData]);
+  useEffect(() => {
+    //console.log(recipeLines);
+  }, [recipeLines, isUpdatingRecipe, recipeCreatorData]);
+
+  /* useEffect(() => {
+    //console.log(recipeCreatorData);
+  }, [recipeCreatorData]); */
 
   return (
     <>

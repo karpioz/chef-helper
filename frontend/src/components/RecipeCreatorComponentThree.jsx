@@ -32,6 +32,27 @@ const RecipeCreatorComponent = ({
 }) => {
   const { label, healthLabels, image, ingredientLines, ingredients } =
     recipeCreatorData;
+  // geting product name for display during edit mode
+
+  const getProductName = (productId) => {
+    let name = "Choose Product";
+
+    if (!productId) return name;
+
+    if (products) {
+      const productName = products.filter(
+        (product) => product._id === productId
+      );
+      let name = productName[0].name;
+      console.log(name);
+      return name;
+    }
+
+    const checkIfImageUploadedByUser = (path) =>
+      path.contains("https://res.cloudinary.com/uws-student/image/upload/")
+        ? true
+        : false;
+  };
 
   return (
     <Form
@@ -99,7 +120,7 @@ const RecipeCreatorComponent = ({
             thumbnail
             style={{ height: "125px", width: "125px" }}
           />
-          {previewSource && (
+          {previewSource || isUpdatingRecipe ? (
             <Badge
               className="img-upload-delete-badge p-1"
               pill
@@ -108,10 +129,10 @@ const RecipeCreatorComponent = ({
             >
               <i className="fas fa-trash"></i>
             </Badge>
-          )}
+          ) : null}
         </Col>
       </Form.Row>
-      <Container className="bg-light p-3 align-items-center">
+      <Container className="bg-light p-3 align-items-center my-3 border border-info rounded">
         {recipeCreatorData.ingredients.map((line, i) => (
           <Form.Row key={i}>
             <Form.Group as={Col}>
@@ -129,7 +150,14 @@ const RecipeCreatorComponent = ({
                 as="select"
                 onChange={(e) => handleChangeProductNew(e, i)}
               >
-                <option>Choose Product:</option>
+                {isUpdatingRecipe && products.length !== 0 ? (
+                  <option value={line.productId}>
+                    {getProductName(line.productId)}
+                  </option>
+                ) : (
+                  <option>Choose Product:</option>
+                )}
+
                 {products.length !== 0 ? (
                   products.map((product) => (
                     <option key={product._id} value={product._id}>

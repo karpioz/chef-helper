@@ -15,7 +15,7 @@ function RecipeComponent({ recipe }) {
   };
   return (
     <Card className={"my-3 rounded"}>
-      <Card.Img variant="top" src={getImageURL(recipe.image)} />
+      <Card.Img variant="top" src={recipe.image} />
       <Card.Body>
         <Card.Title>{recipe.label}</Card.Title>
         <Card.Text>

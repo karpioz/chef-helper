@@ -96,10 +96,44 @@ const getRecipeToUpdateById = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc update recipe
+// @route PATCH /api/recipes/update/:id
+// @access Public
+const updateRecipe = asyncHandler(async (req, res) => {
+  const recipe = await Recipe.findById(req.params.id);
+  const {
+    label,
+    image,
+    healthLabels,
+    ingredientLines,
+    ingredients,
+    //totalTime,
+    //	calories
+  } = req.body;
+
+  if (recipe) {
+    recipe.label = label;
+    recipe.image = image;
+    recipe.healthLabels = healthLabels;
+    recipe.ingredientLines = ingredientLines;
+    recipe.ingredients = ingredients;
+
+    const updatedRecipe = await recipe.save();
+    res.json({
+      message: "Recipe has been updated",
+    });
+  } else {
+    res.status(404).json({
+      error: "Recipe not found",
+    });
+  }
+});
+
 export {
   getRecipes,
   getRecipeById,
   getRecipeToUpdateById,
   createRecipe,
   deleteRecipe,
+  updateRecipe,
 };
