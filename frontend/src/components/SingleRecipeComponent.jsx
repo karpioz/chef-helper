@@ -39,9 +39,9 @@ function SingleRecipeComponent({ recipe }) {
               <h3>{recipe.label}</h3>
             </ListGroup.Item>
 
-            {recipe.ingredientLines.map((ingr, i) => (
+            {recipe.ingredients.map((ingr, i) => (
               <ListGroup.Item key={i} variant="success">
-                {ingr}
+                {ingr.text}
               </ListGroup.Item>
             ))}
           </ListGroup>

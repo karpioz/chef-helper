@@ -7,6 +7,8 @@ import {
   Button,
   Modal,
   Form,
+  InputGroup,
+  FormControl,
 } from "react-bootstrap";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
@@ -96,9 +98,25 @@ const PantryScreen = () => {
     setProducts(data);
   };
 
+  // search for products functionality
+  const [searchInput, setSearchInput] = useState("");
+  const [filteredProducts, setFilteredProducts] = useState([]);
+
+  const handleSearchInputChange = (e) => {
+    e.preventDefault();
+    setSearchInput(e.target.value);
+    let pantryProducts = products.filter((prod) => {
+      return prod.name.match(searchInput);
+    });
+    setFilteredProducts(pantryProducts);
+  };
+
   useEffect(() => {
     fetchProducts();
   }, []);
+  useEffect(() => {
+    //
+  }, [searchInput, filteredProducts]);
 
   useEffect(() => {
     if (submitAdd) {
@@ -108,13 +126,29 @@ const PantryScreen = () => {
 
   return (
     <Container>
-      <Row>
+      <Row className="my-3">
         <Col>
           <ToastContainer />
 
           <h1>Pantry</h1>
         </Col>
+        <Col>
+          <InputGroup className="mt-2">
+            <InputGroup.Prepend>
+              <InputGroup.Text id="basic-addon1">
+                <i class="fas fa-search"></i>
+              </InputGroup.Text>
+            </InputGroup.Prepend>
+            <FormControl
+              placeholder="Search for product..."
+              aria-label="Product name"
+              aria-describedby="basic-addon1"
+              onChange={handleSearchInputChange}
+            />
+          </InputGroup>
+        </Col>
       </Row>
+
       <Row>
         <Col>
           <Table striped bordered hover size="sm">
@@ -127,41 +161,77 @@ const PantryScreen = () => {
               </tr>
             </thead>
             <tbody>
-              {products.map((product, index) => (
-                <tr key={index}>
-                  <td>{product.name}</td>
-                  <td>{product.countInStock}</td>
-                  <td>{product.price}</td>
-                  {isAuth() ? (
-                    <td className="text-right">
-                      <Button
-                        className="mx-1"
-                        variant="warning"
-                        size="sm"
-                        onClick={() => handleShow(product._id)}
-                      >
-                        <i className="fas fa-edit"></i>
-                      </Button>
-                      {isAuth() && isAuth().role === "admin" ? (
-                        <Button
-                          className="mx-1"
-                          variant="danger"
-                          size="sm"
-                          onClick={() => handleShowRemove(product._id)}
-                        >
-                          <i className="fas fa-minus"></i>
-                        </Button>
-                      ) : null}
-                    </td>
-                  ) : (
-                    <td>
-                      <p className="text-danger text-small">
-                        <small>Please login to see actions</small>
-                      </p>
-                    </td>
-                  )}
-                </tr>
-              ))}
+              {searchInput.length > 0
+                ? filteredProducts.map((product, index) => (
+                    <tr key={index}>
+                      <td>{product.name}</td>
+                      <td>{product.countInStock}</td>
+                      <td>{product.price}</td>
+                      {isAuth() ? (
+                        <td className="text-right">
+                          <Button
+                            className="mx-1"
+                            variant="warning"
+                            size="sm"
+                            onClick={() => handleShow(product._id)}
+                          >
+                            <i className="fas fa-edit"></i>
+                          </Button>
+                          {isAuth() && isAuth().role === "admin" ? (
+                            <Button
+                              className="mx-1"
+                              variant="danger"
+                              size="sm"
+                              onClick={() => handleShowRemove(product._id)}
+                            >
+                              <i className="fas fa-minus"></i>
+                            </Button>
+                          ) : null}
+                        </td>
+                      ) : (
+                        <td>
+                          <p className="text-danger text-small">
+                            <small>Please login to see actions</small>
+                          </p>
+                        </td>
+                      )}
+                    </tr>
+                  ))
+                : products.map((product, index) => (
+                    <tr key={index}>
+                      <td>{product.name}</td>
+                      <td>{product.countInStock}</td>
+                      <td>{product.price}</td>
+                      {isAuth() ? (
+                        <td className="text-right">
+                          <Button
+                            className="mx-1"
+                            variant="warning"
+                            size="sm"
+                            onClick={() => handleShow(product._id)}
+                          >
+                            <i className="fas fa-edit"></i>
+                          </Button>
+                          {isAuth() && isAuth().role === "admin" ? (
+                            <Button
+                              className="mx-1"
+                              variant="danger"
+                              size="sm"
+                              onClick={() => handleShowRemove(product._id)}
+                            >
+                              <i className="fas fa-minus"></i>
+                            </Button>
+                          ) : null}
+                        </td>
+                      ) : (
+                        <td>
+                          <p className="text-danger text-small">
+                            <small>Please login to see actions</small>
+                          </p>
+                        </td>
+                      )}
+                    </tr>
+                  ))}
             </tbody>
           </Table>
         </Col>

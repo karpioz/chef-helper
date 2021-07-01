@@ -27,8 +27,8 @@ function RecipeComponent({ recipe }) {
         </Card.Text>
         <Card.Text>
           <ListGroup>
-            {recipe.ingredientLines.map((ingr, i) => (
-              <ListGroup.Item key={i}>{ingr}</ListGroup.Item>
+            {recipe.ingredients.map((ingr, i) => (
+              <ListGroup.Item key={i}>{ingr.text}</ListGroup.Item>
             ))}
           </ListGroup>
         </Card.Text>

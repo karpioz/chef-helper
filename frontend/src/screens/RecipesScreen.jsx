@@ -19,17 +19,27 @@ const RecipesScreen = () => {
     <>
       <Row>
         <Col>
-          <h1>Recipes</h1>
+          {recipes.length !== 0 ? (
+            <h1>All Recipes ({recipes.length})</h1>
+          ) : (
+            <h1 className="text-info">Please wait... loading recipes data</h1>
+          )}
         </Col>
       </Row>
       <Row>
-        <>
-          {recipes.map((recipe) => (
-            <Col key={recipe._id} sm={12} md={6} lg={4} xl={3}>
-              <RecipeComponent recipe={recipe} />
-            </Col>
-          ))}
-        </>
+        {recipes.length !== 0 ? (
+          <>
+            {recipes.map((recipe) => (
+              <Col key={recipe._id} sm={12} md={6} lg={4} xl={3}>
+                <RecipeComponent recipe={recipe} />
+              </Col>
+            ))}
+          </>
+        ) : (
+          <p className="text-danger">
+            <strong>Ooops!!!</strong> Something went wrong... No Recipes found!
+          </p>
+        )}
       </Row>
     </>
   );

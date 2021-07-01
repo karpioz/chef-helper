@@ -260,7 +260,7 @@ const AdminRecipeCreatorScreen = () => {
       )
     ) {
       toast.error(
-        "Image file is just link from internet. Cannot delete that. Please Overwrite link or upload new photo."
+        "Image file is just link from internet. Cannot delete that. Please insert new link or upload photo."
       );
       return;
     }
@@ -308,17 +308,15 @@ const AdminRecipeCreatorScreen = () => {
   const handleAddIngredientNew = (i) => {
     //
     const recipeCreatorFormIngrArray = [...recipeCreatorData.ingredients];
-    recipeCreatorFormIngrArray.push({ productId: "", text: "", weight: 0 });
-    setRecipeCreatorData({
-      ...recipeCreatorData,
-      ingredients: recipeCreatorFormIngrArray,
-    });
-
+    const recipeCreatorTextLines = [...recipeCreatorData.ingredientLines];
     const recipeTextLine = recipeCreatorData.ingredients.map((x) => x.text);
+    recipeCreatorTextLines.push(recipeTextLine);
+
+    recipeCreatorFormIngrArray.push({ productId: "", text: "", weight: 0 });
 
     setRecipeCreatorData({
       ...recipeCreatorData,
-      ingredientLines: recipeTextLine,
+      ingredientLines: recipeCreatorTextLines,
       ingredients: recipeCreatorFormIngrArray,
     });
   };
