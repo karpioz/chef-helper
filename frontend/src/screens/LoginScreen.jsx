@@ -59,8 +59,11 @@ const LoginScreen = ({ location, history }) => {
       <FormContainer>
         <ToastContainer />
         {isAuth() ? <Redirect to="/" /> : null}
-        <h1 className="text-center">Sign In</h1>
-        <Form onSubmit={handleSubmit}>
+        <h1 className="text-center">Please login</h1>
+        <Form
+          className="border border-secondary p-3 my-4 rounded"
+          onSubmit={handleSubmit}
+        >
           <Form.Group controlId="email">
             <Form.Label>Email Address</Form.Label>
             <Form.Control
@@ -78,7 +81,7 @@ const LoginScreen = ({ location, history }) => {
             ></Form.Control>
           </Form.Group>
 
-          <Button type="submit" variant="primary">
+          <Button type="submit" variant="success">
             {buttonText}
           </Button>
         </Form>
@@ -86,7 +89,12 @@ const LoginScreen = ({ location, history }) => {
 
       <Row className="py-3 text-center">
         <Col>
-          New User? <Link to={"/register"}>Register</Link>
+          New User?{" "}
+          <Link className="text-danger" to={"/register"}>
+            <strong>
+              <em>Register</em>
+            </strong>
+          </Link>
         </Col>
       </Row>
     </>

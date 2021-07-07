@@ -7,10 +7,12 @@ const router = express.Router();
 import {
   getRecipes,
   getRecipeById,
+  getBookmarkedRecipes,
   getRecipeToUpdateById,
   createRecipe,
   deleteRecipe,
   updateRecipe,
+  updateRecipeBookmark,
 } from "../controllers/recipesController.js";
 
 // middleware
@@ -19,6 +21,8 @@ import { protect, adminAuth } from "../middleware/authMiddleware.js";
 // routes
 // read all recipes data
 router.get("/", getRecipes);
+// read specific recipe data
+router.get("/bookmarked", getBookmarkedRecipes);
 // read specific recipe data
 router.get("/:id", getRecipeById);
 // read specific recipe data to update
@@ -29,5 +33,7 @@ router.post("/", createRecipe);
 router.delete("/:id", protect, adminAuth, deleteRecipe);
 // update recipe
 router.patch("/update/:id", updateRecipe);
+// update recipe bookmark
+router.patch("/update/bookmark/:id", updateRecipeBookmark);
 
 export default router;

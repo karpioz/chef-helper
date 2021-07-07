@@ -42,27 +42,6 @@ const createTask = asyncHandler(async (req, res) => {
   });
 });
 
-// @desc    Update task
-// @route   PATCH /api/tasks/:id
-// @access  Private/Admin
-/* const updateTask = asyncHandler(async (req, res) => {
-  const { assignedTo, priority, completed } = req.body;
-
-  const task = await Task.findById(req.params.id);
-
-  if (task) {
-    task.assignedTo = assignedTo;
-    task.priority = priority;
-    task.completed = completed;
-
-    const updatedTask = await task.save();
-    res.json(updatedTask);
-  } else {
-    res.status(404);
-    throw new Error({ error: "Task not found" });
-  }
-}); */
-
 // @desc    update finished task
 // @route   PATCH /api/tasks/finished/:id
 // @access  Private/Admin

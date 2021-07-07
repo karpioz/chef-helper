@@ -54,11 +54,14 @@ const RegisterScreen = ({ location, history }) => {
 
   return (
     <FormContainer>
-      <h1 className="text-center">Register</h1>
+      <h1 className="text-center">Please Register</h1>
 
       <ToastContainer />
 
-      <Form onSubmit={handleSubmit}>
+      <Form
+        className="border border-secondary p-3 my-4 rounded"
+        onSubmit={handleSubmit}
+      >
         <Form.Group controlId="name">
           <Form.Label>Name</Form.Label>
           <Form.Control
@@ -95,7 +98,7 @@ const RegisterScreen = ({ location, history }) => {
             onChange={handleInputChange("confirmPassword")}
           ></Form.Control>
         </Form.Group>
-        <Button type="submit" variant="primary">
+        <Button type="submit" variant="success">
           {buttonText}
         </Button>
       </Form>

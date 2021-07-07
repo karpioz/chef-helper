@@ -30,6 +30,8 @@ const AdminRecipeCreatorScreen = () => {
   const [showRemoveModal, setShowRemoveModal] = useState(false);
   const [submitRemove, setSubmitRemove] = useState(false);
 
+  const [bookmarkUpdated, setBookmarkUpdated] = useState(false);
+
   const handleCloseRemoveModal = () => setShowRemoveModal(false);
   const handleClose = () => setShow(false);
 
@@ -61,8 +63,7 @@ const AdminRecipeCreatorScreen = () => {
   const [uploading, setUploading] = useState(false);
 
   // Destructuring recipe's state
-  const { label, healthLabels, image, ingredientLines, ingredients } =
-    recipeCreatorData;
+  const { label, healthLabels, image, ingredients } = recipeCreatorData;
 
   // Displaying Modal Screen to delete recipe
   const handleShowRemoveModal = (id) => {
@@ -98,6 +99,7 @@ const AdminRecipeCreatorScreen = () => {
 
   // Fetching products on load and storing them in the state for use in the recipe creator
   useEffect(() => {
+    setBookmarkUpdated(false);
     fetchProducts();
     return () => {
       setProducts([]);
@@ -106,8 +108,9 @@ const AdminRecipeCreatorScreen = () => {
 
   // Fetching all recipes on first page load, after delete and after update
   useEffect(() => {
+    setBookmarkUpdated(false);
     fetchRecipes();
-  }, [submitRemove, setNewRecipeAdded]);
+  }, [submitRemove, setNewRecipeAdded, bookmarkUpdated]);
 
   // *** handling recipe creator ***
   // submiting completed recipe to database
@@ -118,7 +121,7 @@ const AdminRecipeCreatorScreen = () => {
     axios({
       method: "POST",
       url: `${process.env.REACT_APP_API}/recipes`,
-      data: { label, healthLabels, image, ingredientLines, ingredients },
+      data: { label, healthLabels, image, ingredients },
     })
       .then((response) => {
         setRecipeCreatorData({
@@ -126,7 +129,6 @@ const AdminRecipeCreatorScreen = () => {
           label: "",
           healthLabels: [],
           image: "https://dummyimage.com/125x125/ccc/000",
-          ingredientLines: [],
           ingredients: [],
         });
         setRecipeLines([
@@ -343,6 +345,29 @@ const AdminRecipeCreatorScreen = () => {
     });
   };
 
+  // Bookmarking Recipes
+  const handleClickBookmark = (id) => {
+    //
+    // finding exact recipe by id
+    let bookmarked = recipes.filter((r) => r._id === id);
+    // toggling bookmarke flag true/false or false/true
+    bookmarked = !bookmarked[0].bookmarked;
+
+    // updating it in MongoDB
+    axios({
+      method: "PATCH",
+      url: `${process.env.REACT_APP_API}/recipes/update/bookmark/${id}`,
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getCookie("token")}`,
+      },
+      data: { bookmarked },
+    }).then((response) => {
+      toast.success(`Recipe's bookmark has changed `);
+      setBookmarkUpdated(true);
+    });
+  };
+
   // ***** TESTING NEW RECIPE CREATOR ****
   //-----------------------------------------------
   //
@@ -408,7 +433,7 @@ const AdminRecipeCreatorScreen = () => {
     e.preventDefault();
     const response = await axios.patch(
       `${process.env.REACT_APP_API}/recipes/update/${recipeIdToUpdate}`,
-      { label, healthLabels, image, ingredientLines, ingredients },
+      { label, healthLabels, image, ingredients },
       {
         headers: {
           "Content-Type": "application/json",
@@ -442,7 +467,7 @@ const AdminRecipeCreatorScreen = () => {
 
   // realtime recipe creator inputs feedback
 
-  useEffect(() => {}, [isUpdatingRecipe, recipeCreatorData]);
+  useEffect(() => {}, [isUpdatingRecipe, recipeCreatorData, bookmarkUpdated]);
 
   return (
     <>
@@ -462,6 +487,7 @@ const AdminRecipeCreatorScreen = () => {
               recipes={recipes}
               handleShowRemoveModal={handleShowRemoveModal}
               handleClickUpdate={handleClickUpdate}
+              handleClickBookmark={handleClickBookmark}
             />
           )}
         </Row>

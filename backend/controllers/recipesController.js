@@ -4,9 +4,16 @@ import Recipe from "../models/recipeModel.js";
 // @desc fetch all recipes
 // @route GET /api/recipes
 // @access Public
-
 const getRecipes = asyncHandler(async (req, res) => {
   const recipes = await Recipe.find({});
+  res.json(recipes);
+});
+
+// @desc fetch all bookmarked recipes
+// @route GET /api/recipes/bookmarked
+// @access Public
+const getBookmarkedRecipes = asyncHandler(async (req, res) => {
+  const recipes = await Recipe.find({ bookmarked: true });
   res.json(recipes);
 });
 
@@ -35,7 +42,6 @@ const createRecipe = asyncHandler(async (req, res) => {
     label,
     image,
     healthLabels,
-    ingredientLines,
     ingredients,
     //totalTime,
     //	calories
@@ -45,10 +51,10 @@ const createRecipe = asyncHandler(async (req, res) => {
     label,
     image,
     healthLabels,
-    ingredientLines,
     ingredients,
     calories: 1000,
     totalTime: 120,
+    bookmarked: false,
   });
 
   if (!newRecipe) {
@@ -105,8 +111,8 @@ const updateRecipe = asyncHandler(async (req, res) => {
     label,
     image,
     healthLabels,
-    ingredientLines,
     ingredients,
+    bookmarked,
     //totalTime,
     //	calories
   } = req.body;
@@ -115,8 +121,8 @@ const updateRecipe = asyncHandler(async (req, res) => {
     recipe.label = label;
     recipe.image = image;
     recipe.healthLabels = healthLabels;
-    recipe.ingredientLines = ingredientLines;
     recipe.ingredients = ingredients;
+    recipe.bookmarked = bookmarked;
 
     const updatedRecipe = await recipe.save();
     res.json({
@@ -129,11 +135,35 @@ const updateRecipe = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc    Update recipe bookmark true/false
+// @route   PATCH /api/recipes/update/:id
+// @access  Private/Admin
+const updateRecipeBookmark = asyncHandler(async (req, res) => {
+  const { bookmarked } = req.body;
+
+  const recipe = await Recipe.findById(req.params.id);
+
+  if (recipe) {
+    recipe.bookmarked = bookmarked;
+
+    const updatedRecipe = await recipe.save();
+
+    res.json({
+      message: "Recipe bookmark has been changed",
+    });
+  } else {
+    res.status(404);
+    throw new Error("Recipe not found");
+  }
+});
+
 export {
   getRecipes,
+  getBookmarkedRecipes,
   getRecipeById,
   getRecipeToUpdateById,
   createRecipe,
   deleteRecipe,
   updateRecipe,
+  updateRecipeBookmark,
 };

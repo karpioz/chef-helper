@@ -6,6 +6,7 @@ const AllRecipesTableComponent = ({
   recipes,
   handleShowRemoveModal,
   handleClickUpdate,
+  handleClickBookmark,
 }) => {
   return (
     <Table striped bordered hover responsive className="table-sm">
@@ -22,6 +23,17 @@ const AllRecipesTableComponent = ({
             <td>{i + 1}</td>
             <td>{recipe.label}</td>
             <td className="text-right">
+              <Button
+                variant="dartk"
+                className="btn-sm mx-2"
+                onClick={() => handleClickBookmark(recipe._id)}
+              >
+                {!recipe.bookmarked ? (
+                  <i class="far fa-heart text-info"></i>
+                ) : (
+                  <i class="fas fa-heart text-danger"></i>
+                )}
+              </Button>
               <Button
                 variant="warning"
                 className="btn-sm mx-2"
