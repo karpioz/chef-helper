@@ -98,11 +98,18 @@ const ProfileScreen = () => {
       <ToastContainer />
       <Row>
         <Col>
-          <h1>User Profile</h1>
+          <h1 className="my-4">User Profile</h1>
+          <h4>
+            You can <strong className="text-warning">update</strong> your login
+            details
+          </h4>
         </Col>
       </Row>
-      <Row>
-        <Form onSubmit={handleSubmitUpdate}>
+      <Row className="text-center text-info font-weight-bold">
+        <Form
+          onSubmit={handleSubmitUpdate}
+          className="border border-secondary p-3 my-4 rounded"
+        >
           <Form.Group controlId="name">
             <Form.Label>Name</Form.Label>
             <Form.Control
@@ -144,7 +151,6 @@ const ProfileScreen = () => {
           </Button>
         </Form>
       </Row>
-      {JSON.stringify(formData)}
     </Container>
   );
 };

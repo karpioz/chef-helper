@@ -6,6 +6,8 @@ import { LinkContainer } from "react-router-bootstrap";
 
 // importing components
 import BookmarkedRecipesCarousel from "../components/BookmarkedRecipesCarousel";
+import HomeScreenUserNavigation from "../components/HomeScreenUserNavigation";
+import HomeScreenAdminNavigation from "../components/HomeScreenAdminNavigation";
 
 const HomeScreen = () => {
   let name = isAuth() ? isAuth().name.split(" ") : [];
@@ -39,6 +41,8 @@ const HomeScreen = () => {
             <span className="text-danger">Stranger </span>
           )}
         </h1>
+        {isAuth() && isAuth().role === "admin" && <HomeScreenAdminNavigation />}
+        {isAuth() && isAuth().role === "user" && <HomeScreenUserNavigation />}
         {!isAuth() && (
           <h3 className="text-center">
             Please{" "}

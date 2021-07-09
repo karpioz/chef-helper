@@ -476,10 +476,19 @@ const AdminRecipeCreatorScreen = () => {
           <ToastContainer />
           <Col>
             <h1 className="text-center my-3">Recipes Management</h1>
+            <h4 className="text-center my-2">
+              <span className="text-success">Create</span>,{" "}
+              <span className="text-warning">Edit</span>,{" "}
+              <span className="text-danger">Delete</span> or Bookmark recipes
+            </h4>
           </Col>
         </Row>
         <Row>
-          <h2 className="text-center my-3">All Recipes</h2>
+          <Col>
+            <h2 className="text-center my-3 text-info">All Recipes</h2>
+          </Col>
+        </Row>
+        <Row>
           {isFetchingRecipes ? (
             <Spinner />
           ) : (
@@ -491,9 +500,10 @@ const AdminRecipeCreatorScreen = () => {
             />
           )}
         </Row>
+
         <Row>
           <Col>
-            <h2 className="my-3 text-center">Recipe Creator</h2>
+            <h2 className="my-3 text-center text-info">Recipe Creator</h2>
           </Col>
         </Row>
         <Row>
@@ -526,12 +536,12 @@ const AdminRecipeCreatorScreen = () => {
           </Col>
         </Row>
 
-        <hr />
+        {/* <hr />
         {JSON.stringify(recipeCreatorData)}
         <hr />
         {JSON.stringify(recipeLines)}
         <hr />
-        {JSON.stringify(recipeToUpdateData)}
+        {JSON.stringify(recipeToUpdateData)} */}
         {/* Remove Recipe Modal */}
         {
           <Modal show={showRemoveModal} onHide={handleClose} animation={false}>

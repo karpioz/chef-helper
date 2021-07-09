@@ -3,7 +3,6 @@ import { Row, Col, Form, Button, Spinner } from "react-bootstrap";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
-import RecipeCreatorComponent from "../components/RecipeCreatorComponentThree";
 import { setPriorityColour } from "../utilities/stylingUtilities";
 import { getCookie } from "../utilities/authUtilities.js";
 
@@ -22,37 +21,15 @@ const AdminScreen = () => {
     price: "",
     defaultWeightInGrams: "",
   });
-  const [recipeCreatorData, setRecipeCreatorData] = useState({
-    label: "",
-    healthLabels: [],
-    image: "",
-    ingredientLines: [],
-    ingredients: [
-      {
-        productId: "Sample Id",
-        text: "Sample Description",
-        weight: "0",
-      },
-    ],
-  });
-
   const [isFetchingProducts, setIsFetchingProducts] = useState(true);
 
   const [products, setProducts] = useState([]);
-
-  const [recipeLines, setRecipeLines] = useState({
-    productId: "Sample Id",
-    text: "Sample Description",
-    weight: "0",
-  });
 
   const [uploading, setUploading] = useState(false);
 
   // destructuring state
   const { name, countInStock, price, defaultWeightInGrams } = productsFormData;
   const { taskName, assignedTo, priority } = taskFormData;
-  const { label, healthLabels, image, ingredientLines, ingredients } =
-    recipeCreatorData;
 
   // handling Product form changes
   const handleProductInputChange = (name) => (event) => {
@@ -133,73 +110,7 @@ const AdminScreen = () => {
       });
   };
 
-  // handling recipe creator
-
-  // submiting completed recipe to database
-  const handleRecipeSubmit = (e) => {
-    e.preventDefault();
-    // axios to connect with backend
-    axios({
-      method: "POST",
-      url: `${process.env.REACT_APP_API}/recipes`,
-      data: { label, healthLabels, image, ingredientLines, ingredients },
-    })
-      .then((response) => {
-        setRecipeCreatorData({
-          ...recipeCreatorData,
-          label: "",
-          healthLabels: [],
-          image: "",
-          ingredientLines: [],
-          ingredients: [],
-        });
-        toast.success(response.data.message);
-      })
-      .catch((error) => {
-        console.log("RECIPE CREATE ERROR", error.response.data);
-        setRecipeCreatorData({ ...recipeCreatorData });
-        toast.error(error.response.data.error);
-      });
-    console.log(recipeCreatorData);
-    console.log("Recipe submitted");
-  };
-
-  // handling Recipe Inputs name, healthLabels, image link
-  const handleRecipeCreatorInputChange = (name) => (event) => {
-    // getting existing state and update the key with same name as function argument
-    if (name === "healthLabels") {
-      let healthLabArr = event.target.value.split(",");
-      setRecipeCreatorData({
-        ...recipeCreatorData,
-        healthLabels: healthLabArr,
-      });
-    } else {
-      setRecipeCreatorData({
-        ...recipeCreatorData,
-        [name]: event.target.value,
-      });
-    }
-  };
-
-  const handleIngredientLines = (name) => (event) => {
-    console.log(event.target.value);
-    // getting existing state and update the key with same name as function argument
-    setRecipeLines((recipeLines) => ({
-      ...recipeLines,
-      [name]: event.target.value,
-    }));
-    console.log(recipeLines);
-  };
-
-  // storing product id in recipeLines state
-  const handleChangeProduct = (event) => {
-    setRecipeLines((recipeLines) => ({
-      ...recipeLines,
-      productId: event.target.value,
-    }));
-  };
-
-  // uploading image file
+  /* // uploading image file
   const uploadFileHandler = async (event) => {
     const file = event.target.files[0];
     const formData = new FormData();
@@ -224,35 +135,7 @@ const AdminScreen = () => {
       console.error(error);
       setUploading(false);
     }
-  };
-
-  // realtime recipe creator inputs feedback
-
-  useEffect(() => {
-    console.log(recipeLines);
-  }, [recipeLines]);
-
-  useEffect(() => {
-    console.log(recipeCreatorData);
-  }, [recipeCreatorData]);
-
-  // adding ingredient object to the recipe's ingredients array
-  const handleAddIngredient = () => {
-    let recipeIngrArray = [...recipeCreatorData.ingredients];
-    let ingredientLines = [...recipeCreatorData.ingredientLines];
-    recipeIngrArray.push(recipeLines);
-    ingredientLines.push(recipeLines.text);
-    setRecipeCreatorData({
-      ...recipeCreatorData,
-      ingredientLines,
-      ingredients: recipeIngrArray,
-    });
-    //
-    console.log(recipeLines);
-    console.log("Line added");
-    setRecipeLines({ productId: "", text: "", weight: "" });
-    console.log(recipeCreatorData);
-  };
+  }; */
 
   // fetching users on load
   const fetchUsers = async () => {
@@ -292,7 +175,7 @@ const AdminScreen = () => {
       <Row>
         <ToastContainer />
         <Col>
-          <h1 className="text-center my-3">Admin Dashboard</h1>
+          <h1 className="text-center my-3">Stock and Task Management</h1>
         </Col>
       </Row>
       <Row>
@@ -404,31 +287,6 @@ const AdminScreen = () => {
           </Form>
         </Col>
       </Row>
-      {/* <Row className="my-3">
-        <Col>
-          <h2>Recipe Creator</h2>
-
-          {isFetchingProducts ? (
-            <Spinner animation="border" role="status">
-              <span className="sr-only">Loading...</span>
-            </Spinner>
-          ) : (
-            <RecipeCreatorComponent
-              handleRecipeSubmit={handleRecipeSubmit}
-              handleRecipeCreatorInputChange={handleRecipeCreatorInputChange}
-              recipeCreatorData={recipeCreatorData}
-              handleIngredientLines={handleIngredientLines}
-              products={products}
-              handleChangeProduct={handleChangeProduct}
-              handleAddIngredient={handleAddIngredient}
-              recipeLines={recipeLines}
-              setRecipeLines={setRecipeLines}
-              uploading={uploading}
-              uploadFileHandler={uploadFileHandler}
-            />
-          )}
-        </Col>
-      </Row> */}
     </>
   );
 };
