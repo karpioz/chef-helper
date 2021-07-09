@@ -8,11 +8,13 @@ import { LinkContainer } from "react-router-bootstrap";
 import BookmarkedRecipesCarousel from "../components/BookmarkedRecipesCarousel";
 import HomeScreenUserNavigation from "../components/HomeScreenUserNavigation";
 import HomeScreenAdminNavigation from "../components/HomeScreenAdminNavigation";
+import HighPriorityTasks from "../components/HighPriorityTasks";
 
 const HomeScreen = () => {
   let name = isAuth() ? isAuth().name.split(" ") : [];
 
   const [bookmarkedRecipes, setBookmarkedRecipes] = useState([]);
+  const [highPriorityTasks, setHighPriorityTasks] = useState([]);
 
   const fetchBookmarkedRecipes = async () => {
     const { data } = await axios.get(
@@ -21,17 +23,18 @@ const HomeScreen = () => {
     setBookmarkedRecipes(data);
   };
 
+  const fetchHighPriorityTasks = async () => {
+    const { data } = await axios.get(`${process.env.REACT_APP_API}/tasks/high`);
+    setHighPriorityTasks(data);
+  };
+
   useEffect(() => {
     fetchBookmarkedRecipes();
+    fetchHighPriorityTasks();
   }, []);
 
   return (
     <>
-      <Container className="my-3">
-        {bookmarkedRecipes.length > 0 && (
-          <BookmarkedRecipesCarousel recipes={bookmarkedRecipes} />
-        )}
-      </Container>
       <Container>
         <h1 className="my-4 text-center">
           Welcome{" "}
@@ -55,6 +58,14 @@ const HomeScreen = () => {
             </LinkContainer>{" "}
             to fully enjoy <strong>Chef Helper</strong> App!
           </h3>
+        )}
+      </Container>
+      <Container className="my-3">
+        {bookmarkedRecipes.length > 0 && (
+          <BookmarkedRecipesCarousel recipes={bookmarkedRecipes} />
+        )}
+        {highPriorityTasks.length > 0 && (
+          <HighPriorityTasks tasks={highPriorityTasks} />
         )}
       </Container>
     </>

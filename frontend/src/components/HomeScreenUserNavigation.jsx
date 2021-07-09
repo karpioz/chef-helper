@@ -9,7 +9,11 @@ function HomeScreenUserNavigation({ history }) {
     <Nav className="justify-content-center" activeKey="/home">
       <LinkContainer to={"/profile"}>
         <Nav.Link className="text-info">
-          <i class="fas fa-users-cog fa-2x"></i> Profile
+          <i
+            class="fas fa-users-cog fa-2x"
+            style={{ textShadow: "1px 1px 3px rgba(0,0,0,.85)" }}
+          ></i>{" "}
+          <strong>Profile</strong>
         </Nav.Link>
       </LinkContainer>
 
@@ -21,7 +25,11 @@ function HomeScreenUserNavigation({ history }) {
         }}
       >
         <Nav.Link className="text-danger">
-          <i class="fas fa-sign-out-alt fa-2x"></i> Logout
+          <i
+            class="fas fa-sign-out-alt fa-2x"
+            style={{ textShadow: "1px 1px 3px rgba(0,0,0,.85)" }}
+          ></i>{" "}
+          <strong>Logout</strong>
         </Nav.Link>
       </Nav.Item>
     </Nav>

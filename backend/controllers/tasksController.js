@@ -17,6 +17,24 @@ const getTasks = asyncHandler(async (req, res) => {
     }
   } catch (error) {}
 });
+// @desc fetch high priority tasks
+// @route GET /api/tasks/high
+// @access Public
+
+const getHighPriorityTasks = asyncHandler(async (req, res) => {
+  try {
+    const tasks = await Task.find({ priority: "high" }).populate("assignedTo", {
+      name: 1,
+    });
+    if (tasks) {
+      res.json(tasks);
+    } else {
+      res.status(500).json({
+        error: "Something went wrong",
+      });
+    }
+  } catch (error) {}
+});
 
 // @desc    Create a task
 // @route   POST /api/tasks
@@ -97,4 +115,11 @@ const deleteTask = asyncHandler(async (req, res) => {
   }
 });
 
-export { getTasks, createTask, updateTask, updateTaskFinished, deleteTask };
+export {
+  getTasks,
+  getHighPriorityTasks,
+  createTask,
+  updateTask,
+  updateTaskFinished,
+  deleteTask,
+};

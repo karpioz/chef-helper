@@ -9,6 +9,7 @@ import { protect, adminAuth } from "../middleware/authMiddleware.js";
 // Importing controllers
 import {
   getTasks,
+  getHighPriorityTasks,
   createTask,
   updateTask,
   updateTaskFinished,
@@ -18,6 +19,9 @@ import {
 // routes
 // read all tasks
 router.get("/", getTasks);
+
+// read gigh priority tasks
+router.get("/high", getHighPriorityTasks);
 
 // create new task
 router.post("/", protect, createTask);
