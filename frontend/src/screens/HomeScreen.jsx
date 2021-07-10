@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Row, Col, Container } from "react-bootstrap";
+import { Row, Col, Container, Alert } from "react-bootstrap";
 import axios from "axios";
 import { isAuth } from "../utilities/authUtilities";
 import { LinkContainer } from "react-router-bootstrap";
@@ -36,29 +36,36 @@ const HomeScreen = () => {
   return (
     <>
       <Container>
-        <h1 className="my-4 text-center">
-          Welcome{" "}
-          {isAuth() ? (
-            <span className="text-warning">{name[0]} </span>
-          ) : (
-            <span className="text-danger">Stranger </span>
+        <Alert variant="secondary" className="my-4">
+          <Alert.Heading>
+            <h1 className="my-4 text-center">
+              Welcome{" "}
+              {isAuth() ? (
+                <span className="text-success">{name[0]} </span>
+              ) : (
+                <span className="text-danger">Stranger </span>
+              )}
+            </h1>
+          </Alert.Heading>
+          <hr />
+          {!isAuth() && (
+            <h3 className="text-center">
+              Please{" "}
+              <LinkContainer to="/login">
+                <em className="text-info home-link">login</em>
+              </LinkContainer>{" "}
+              or{" "}
+              <LinkContainer to="/register">
+                <em className="text-success home-link">register</em>
+              </LinkContainer>{" "}
+              to fully enjoy <strong>Chef Helper</strong> App!
+            </h3>
           )}
-        </h1>
-        {isAuth() && isAuth().role === "admin" && <HomeScreenAdminNavigation />}
-        {isAuth() && isAuth().role === "user" && <HomeScreenUserNavigation />}
-        {!isAuth() && (
-          <h3 className="text-center">
-            Please{" "}
-            <LinkContainer to="/login">
-              <em className="text-info home-link">login</em>
-            </LinkContainer>{" "}
-            or{" "}
-            <LinkContainer to="/register">
-              <em className="text-success home-link">register</em>
-            </LinkContainer>{" "}
-            to fully enjoy <strong>Chef Helper</strong> App!
-          </h3>
-        )}
+          {isAuth() && isAuth().role === "admin" && (
+            <HomeScreenAdminNavigation />
+          )}
+          {isAuth() && isAuth().role === "user" && <HomeScreenUserNavigation />}
+        </Alert>
       </Container>
       <Container className="my-3">
         {bookmarkedRecipes.length > 0 && (

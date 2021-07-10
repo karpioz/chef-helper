@@ -8,7 +8,7 @@ function HomeScreenAdminNavigation({ history }) {
   return (
     <Nav className="justify-content-center" activeKey="/home">
       <LinkContainer to={"/admin/users"}>
-        <Nav.Link className="text-info">
+        <Nav.Link className="text-dark">
           <i
             class="fas fa-users-cog fa-2x text-warning"
             style={{ textShadow: "1px 1px 3px rgba(0,0,0,.85)" }}
@@ -17,7 +17,7 @@ function HomeScreenAdminNavigation({ history }) {
         </Nav.Link>
       </LinkContainer>
       <LinkContainer to={"/admin/recipe"}>
-        <Nav.Link className="text-info">
+        <Nav.Link className="text-dark">
           <i
             className="fas fa-utensils fa-2x text-warning"
             style={{ textShadow: "1px 1px 3px rgba(0,0,0,.85)" }}
@@ -26,7 +26,7 @@ function HomeScreenAdminNavigation({ history }) {
         </Nav.Link>
       </LinkContainer>
       <LinkContainer to={"/admin/rota"}>
-        <Nav.Link className="text-info">
+        <Nav.Link className="text-dark">
           <i
             className="far fa-calendar-alt fa-2x text-warning"
             style={{ textShadow: "1px 1px 3px rgba(0,0,0,.85)" }}
@@ -35,7 +35,7 @@ function HomeScreenAdminNavigation({ history }) {
         </Nav.Link>
       </LinkContainer>
       <LinkContainer to={"/admin"}>
-        <Nav.Link className="text-info">
+        <Nav.Link className="text-dark">
           <i
             className="fas fa-clipboard-list fa-2x text-warning"
             style={{ textShadow: "1px 1px 3px rgba(0,0,0,.85)" }}

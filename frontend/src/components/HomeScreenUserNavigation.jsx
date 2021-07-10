@@ -8,12 +8,12 @@ function HomeScreenUserNavigation({ history }) {
   return (
     <Nav className="justify-content-center" activeKey="/home">
       <LinkContainer to={"/profile"}>
-        <Nav.Link className="text-info">
+        <Nav.Link className="text-warning">
           <i
             class="fas fa-users-cog fa-2x"
             style={{ textShadow: "1px 1px 3px rgba(0,0,0,.85)" }}
           ></i>{" "}
-          <strong>Profile</strong>
+          <strong className="text-dark">Profile</strong>
         </Nav.Link>
       </LinkContainer>
 

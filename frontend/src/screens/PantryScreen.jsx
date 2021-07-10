@@ -106,7 +106,9 @@ const PantryScreen = () => {
     e.preventDefault();
     setSearchInput(e.target.value);
     let pantryProducts = products.filter((prod) => {
-      return prod.name.match(searchInput);
+      let productName = prod.name.toLowerCase();
+      //return prod.name.match(searchInput);
+      return productName.match(searchInput.toLowerCase());
     });
     setFilteredProducts(pantryProducts);
   };

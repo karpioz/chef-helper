@@ -19,7 +19,8 @@ const RecipesScreen = () => {
     e.preventDefault();
     setSearchInput(e.target.value);
     let storedRecipes = recipes.filter((recipe) => {
-      return recipe.label.match(searchInput);
+      let recipeNameLowerCase = recipe.label.toLowerCase();
+      return recipeNameLowerCase.match(searchInput.toLowerCase());
     });
     setFilteredRecipes(storedRecipes);
   };
@@ -28,7 +29,9 @@ const RecipesScreen = () => {
     fetchRecipes();
   }, []);
 
-  useEffect(() => {}, [filteredRecipes, searchInput, recipes]);
+  useEffect(() => {
+    //
+  }, [filteredRecipes, searchInput]);
 
   return (
     <>
@@ -60,15 +63,6 @@ const RecipesScreen = () => {
         </Col>
       </Row>
       <Row>
-        {recipes.length !== 0 && filteredRecipes.length === 0 ? (
-          <>
-            {recipes.map((recipe) => (
-              <Col sm={12} md={6} lg={4} xl={3}>
-                <RecipeComponent key={recipe._id} recipe={recipe} />
-              </Col>
-            ))}
-          </>
-        ) : null}
         {searchInput.length > 0
           ? filteredRecipes.map((recipe, index) => (
               <Col sm={12} md={6} lg={4} xl={3}>
@@ -80,6 +74,7 @@ const RecipesScreen = () => {
                 <RecipeComponent key={recipe._id} recipe={recipe} />
               </Col>
             ))}
+
         {recipes.length === 0 && (
           <p className="text-danger">
             <strong>Ooops!!!</strong> Something went wrong... No Recipes found!

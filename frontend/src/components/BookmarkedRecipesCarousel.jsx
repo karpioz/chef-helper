@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 function BookmarkedRecipesCarousel({ recipes }) {
   return (
     <>
-      <h2 className="text-center my-3">Recipes of the week</h2>
+      <h2 className="text-center my-3">Chef's Favourite Recipes</h2>
       <Carousel pause="hover" className="bg-dark">
         {recipes.map((recipe) => (
           <Carousel.Item key={recipe._id}>
