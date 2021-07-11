@@ -15,6 +15,8 @@ import "react-toastify/dist/ReactToastify.min.css";
 import axios from "axios";
 import { isAuth } from "../utilities/authUtilities";
 
+import PaginationComponent from "../components/PaginationComponent";
+
 const PantryScreen = () => {
   const [products, setProducts] = useState([]);
 
@@ -92,10 +94,32 @@ const PantryScreen = () => {
     setModalDataSubt(0);
   };
 
-  // fetching products on load
+  // fetching products on load method
   const fetchProducts = async () => {
     const { data } = await axios.get(`${process.env.REACT_APP_API}/products`);
     setProducts(data);
+    getCurrentProducts();
+  };
+
+  // pagination functionality
+  const [currentPage, setCurrentPage] = useState(1);
+  const [productsPerPage] = useState(5);
+  const [currentProductsState, setCurrentProductState] = useState([]);
+
+  // Get current products
+  const getCurrentProducts = () => {
+    const indexOfLastProduct = currentPage * productsPerPage;
+    const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+    let currentProducts = products.slice(
+      indexOfFirstProduct,
+      indexOfLastProduct
+    );
+    setCurrentProductState(currentProducts);
+  };
+
+  // Change page
+  const paginate = (pageNumber) => {
+    setCurrentPage(pageNumber);
   };
 
   // search for products functionality
@@ -113,9 +137,12 @@ const PantryScreen = () => {
     setFilteredProducts(pantryProducts);
   };
 
+  // Use Effect hooks for fetching all products on page display
+
   useEffect(() => {
     fetchProducts();
   }, []);
+
   useEffect(() => {
     //
   }, [searchInput, filteredProducts]);
@@ -138,7 +165,7 @@ const PantryScreen = () => {
           <InputGroup className="mt-2">
             <InputGroup.Prepend>
               <InputGroup.Text id="basic-addon1">
-                <i class="fas fa-search"></i>
+                <i className="fas fa-search"></i>
               </InputGroup.Text>
             </InputGroup.Prepend>
             <FormControl
@@ -237,6 +264,14 @@ const PantryScreen = () => {
             </tbody>
           </Table>
         </Col>
+      </Row>
+      <Row className="my-4 ">
+        <PaginationComponent
+          productsPerPage={productsPerPage}
+          totalProducts={products.length}
+          paginate={paginate}
+          className="text-center"
+        />
       </Row>
       <Modal show={show} onHide={handleClose} animation={false}>
         <Modal.Header closeButton>
