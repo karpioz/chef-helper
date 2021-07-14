@@ -3,8 +3,11 @@ import { Row, Col, Form, Button, Spinner } from "react-bootstrap";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
+// components
+import HomeScreenAdminNavigation from "../components/HomeScreenAdminNavigation";
+// helper methods
 import { setPriorityColour } from "../utilities/stylingUtilities";
-import { getCookie } from "../utilities/authUtilities.js";
+import { getCookie, isAuth } from "../utilities/authUtilities.js";
 
 const AdminScreen = () => {
   // state with useState hook
@@ -172,6 +175,13 @@ const AdminScreen = () => {
 
   return (
     <>
+      {isAuth() && isAuth().role === "admin" && (
+        <Row>
+          <Col>
+            <HomeScreenAdminNavigation />
+          </Col>
+        </Row>
+      )}
       <Row>
         <ToastContainer />
         <Col>

@@ -1,12 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { Row, Col, Modal, Spinner, Button, Form } from "react-bootstrap";
-import { LinkContainer } from "react-router-bootstrap";
 import axios from "axios";
+import { Row, Col, Modal, Spinner, Button, Form } from "react-bootstrap";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
+
+// components
 import RotaCreatorComponent from "../components/RotaCreatorComponentTwo";
 import AllRotasTableComponent from "../components/AllRotasTableComponent";
-import { getCookie } from "../utilities/authUtilities";
+import HomeScreenAdminNavigation from "../components/HomeScreenAdminNavigation";
+
+// helper methods
+import { getCookie, isAuth } from "../utilities/authUtilities";
 
 const AdminRotaCreatorScreen = () => {
   // state with useState hook
@@ -93,6 +97,13 @@ const AdminRotaCreatorScreen = () => {
 
   return (
     <>
+      {isAuth() && isAuth().role === "admin" && (
+        <Row>
+          <Col>
+            <HomeScreenAdminNavigation />
+          </Col>
+        </Row>
+      )}
       <Row>
         <ToastContainer />
         <Col>

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 import {
   Row,
   Col,
@@ -7,14 +8,20 @@ import {
   Button,
   Form,
   Container,
+  InputGroup,
+  FormControl,
 } from "react-bootstrap";
-import { LinkContainer } from "react-router-bootstrap";
-import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
+
+// import components
 import AllRecipesTableComponent from "../components/AllRecipesTableComponent";
 import RecipeCreatorComponent from "../components/RecipeCreatorComponentThree";
-import { getCookie } from "../utilities/authUtilities";
+import EdamamRecipesComponent from "../components/EdamamRecipesComponent";
+import HomeScreenAdminNavigation from "../components/HomeScreenAdminNavigation";
+
+// import helper methods
+import { getCookie, isAuth } from "../utilities/authUtilities";
 
 const AdminRecipeCreatorScreen = () => {
   // state with useState hook
@@ -465,13 +472,57 @@ const AdminRecipeCreatorScreen = () => {
     }
   };
 
+  // search EDAMAM Recipes API for recipes
+  // EDAMAM search query
+  // https://api.edamam.com/search?q=pizza&app_id=a1bd6451&app_key=31f1c205b4c0de6c1b021ac04c06efe6&from=0&to=9
+
+  const [searchInput, setSearchInput] = useState("");
+  const [edamamRecipes, setEdamamRecipes] = useState([]);
+  const [edamamRecipesLoaded, setEdamamRecipesLoaded] = useState(false);
+
+  const handleSearchInputChange = (e) => {
+    e.preventDefault();
+    setSearchInput(e.target.value);
+  };
+
+  const handleSearchEdamamApi = async () => {
+    const recipeQuery = searchInput;
+    const edamamURL = `https://api.edamam.com/search?q=${recipeQuery}&app_id=${process.env.REACT_APP_API_ID}&app_key=${process.env.REACT_APP_API_KEY}&from=0&to=9`;
+    console.log(`looking for... ${recipeQuery}`);
+    const response = await axios.get(`${edamamURL}`);
+    console.log(response);
+    if (response) {
+      setEdamamRecipes(response.data.hits);
+      setEdamamRecipesLoaded(true);
+    } else {
+      console.log(
+        "something went wrong with EDAMAM API... Please try again later"
+      );
+      setEdamamRecipesLoaded(false);
+    }
+  };
+
+  //------------------------
+
   // realtime recipe creator inputs feedback
 
-  useEffect(() => {}, [isUpdatingRecipe, recipeCreatorData, bookmarkUpdated]);
+  useEffect(() => {}, [
+    isUpdatingRecipe,
+    recipeCreatorData,
+    bookmarkUpdated,
+    edamamRecipesLoaded,
+  ]);
 
   return (
     <>
       <Container>
+        {isAuth() && isAuth().role === "admin" && (
+          <Row>
+            <Col>
+              <HomeScreenAdminNavigation />
+            </Col>
+          </Row>
+        )}
         <Row>
           <ToastContainer />
           <Col>
@@ -500,7 +551,6 @@ const AdminRecipeCreatorScreen = () => {
             />
           )}
         </Row>
-
         <Row>
           <Col>
             <h2 className="my-3 text-center text-info">Recipe Creator</h2>
@@ -535,13 +585,79 @@ const AdminRecipeCreatorScreen = () => {
             )}
           </Col>
         </Row>
+        <Row>
+          <Col>
+            <h2 className="my-3 text-center text-info">Need an Inspiration?</h2>
+            <h5 className="text-success text-center">
+              Search over 2.5 million recipes...
+            </h5>
+            <h6 className="text-warning text-center">
+              powered by{" "}
+              <a href="https://www.edamam.com/" target="_blank">
+                &copy;Edamam's
+              </a>{" "}
+              Recipe Search API
+            </h6>
+          </Col>
+        </Row>
+        <Row className="my-3">
+          <Col>
+            <InputGroup className="mt-2">
+              <InputGroup.Prepend>
+                <InputGroup.Text id="basic-addon1">
+                  <i className="fas fa-search"></i>
+                </InputGroup.Text>
+              </InputGroup.Prepend>
+              <FormControl
+                placeholder="Search Internet for recipe or ingredient..."
+                aria-label="Product name"
+                aria-describedby="basic-addon1"
+                onChange={handleSearchInputChange}
+                className="edamam-search-input"
+                value={searchInput}
+              />
+              {searchInput.length > 0 && (
+                <InputGroup.Append
+                  className="edamam-search-reset-icon"
+                  onClick={() => {
+                    setSearchInput("");
+                    setEdamamRecipesLoaded(false);
+                  }}
+                >
+                  <InputGroup.Text className="bg-danger text-light">
+                    <i class="far fa-times-circle"></i>
+                  </InputGroup.Text>
+                </InputGroup.Append>
+              )}
+              <Button
+                variant="warning"
+                type="submit"
+                className="ml-2"
+                onClick={handleSearchEdamamApi}
+                disabled={searchInput.length === 0 && true}
+              >
+                Search
+              </Button>
+            </InputGroup>
+          </Col>
+        </Row>
+        <hr
+          className="my-3 text-info"
+          style={{ width: "50%", height: "3px" }}
+        />
+        {edamamRecipesLoaded ? (
+          <Row>
+            <Container className="d-flex flex-wrap">
+              <EdamamRecipesComponent
+                className="my-3"
+                edamamRecipes={edamamRecipes}
+              />
+            </Container>
+          </Row>
+        ) : null}
 
-        {/* <hr />
-        {JSON.stringify(recipeCreatorData)}
         <hr />
-        {JSON.stringify(recipeLines)}
-        <hr />
-        {JSON.stringify(recipeToUpdateData)} */}
+        {JSON.stringify(searchInput)}
         {/* Remove Recipe Modal */}
         {
           <Modal show={showRemoveModal} onHide={handleClose} animation={false}>

@@ -265,14 +265,14 @@ const PantryScreen = () => {
           </Table>
         </Col>
       </Row>
-      <Row className="my-4 ">
+      {/* <Row className="my-4 ">
         <PaginationComponent
           productsPerPage={productsPerPage}
           totalProducts={products.length}
           paginate={paginate}
           className="text-center"
         />
-      </Row>
+      </Row> */}
       <Modal show={show} onHide={handleClose} animation={false}>
         <Modal.Header closeButton>
           <Modal.Title>
