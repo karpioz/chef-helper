@@ -1,20 +1,21 @@
 {
   "name": "chef-helper",
   "version": "1.0.0",
-  "description": "Hons Project MERN stack app",
+  "description": "Hons Project MERN stack app for small kitchen management (todos, rota, recipes, stock, users)",
   "main": "server.js",
   "type": "module",
   "scripts": {
     "start": "node backend/server",
     "server": "nodemon backend/server",
     "client": "npm start --prefix frontend",
-    "dev": "concurrently \"npm run server\" \"npm run client\""
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix frontend && npm run build --prefix frontend"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/karpioz/chef-helper.git"
   },
-  "author": "Pawel Karpinski",
+  "author": "Pawel Karpinski | UWS B00360376",
   "license": "ISC",
   "dependencies": {
     "@sendgrid/mail": "^7.4.2",
