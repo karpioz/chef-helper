@@ -33,7 +33,7 @@ app.use(express.urlencoded({ limit: "50mb", extended: true }));
 // morgan - HTTP request logger
 app.use(morgan("dev"));
 // cors allow request from all origins
-if (process.env.NODE_ENV == "development") {
+if (process.env.NODE_ENV === "development") {
   app.use(cors({ origin: "http://localhost:3000" }));
 }
 
@@ -47,12 +47,21 @@ app.use("/api/upload", uploadRoutes);
 app.use("/api/upload/cloudinary", uploadRoutesCloudinary);
 
 // making uploads folder accessible for browser
-const folder = path.resolve();
-app.use("/uploads", express.static(path.join(folder, "/uploads")));
+const __path = path.resolve();
+app.use("/uploads", express.static(path.join(__path, "/uploads")));
 
-app.get("/", (req, res) => {
-  res.send("API is running...");
-});
+// preparing for deployment
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__path, "/frontend/build")));
+
+  app.get("*", (req, res) =>
+    res.sendFile(path.resolve(__path, "frontend", "build", "index.html"))
+  );
+} else {
+  app.get("/", (req, res) => {
+    res.send("API is running...");
+  });
+}
 
 const PORT = process.env.PORT || 8000;
 

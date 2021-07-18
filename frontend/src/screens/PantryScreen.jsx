@@ -185,7 +185,6 @@ const PantryScreen = () => {
               <tr>
                 <th>Name</th>
                 <th>Quantity (grams)</th>
-                <th>Price</th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -195,7 +194,6 @@ const PantryScreen = () => {
                     <tr key={index}>
                       <td>{product.name}</td>
                       <td>{product.countInStock}</td>
-                      <td>{product.price}</td>
                       {isAuth() ? (
                         <td className="text-right">
                           <Button
@@ -230,7 +228,6 @@ const PantryScreen = () => {
                     <tr key={index}>
                       <td>{product.name}</td>
                       <td>{product.countInStock}</td>
-                      <td>{product.price}</td>
                       {isAuth() ? (
                         <td className="text-right">
                           <Button

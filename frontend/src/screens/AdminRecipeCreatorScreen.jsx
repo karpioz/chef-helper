@@ -656,8 +656,7 @@ const AdminRecipeCreatorScreen = () => {
           </Row>
         ) : null}
 
-        <hr />
-        {JSON.stringify(searchInput)}
+        {/* {JSON.stringify(searchInput)} */}
         {/* Remove Recipe Modal */}
         {
           <Modal show={showRemoveModal} onHide={handleClose} animation={false}>
