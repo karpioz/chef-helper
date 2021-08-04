@@ -35,12 +35,11 @@ router.post(
   runValidation,
   signupUserWithSendGridByAdmin
 );
+// account email activation
+router.post("/activate", accountActivation);
 
 // log-in
 router.post("/login", userLoginValidator, authUser);
-
-// account email activation
-router.post("/activate", accountActivation);
 
 // get all user namers
 router.get("/users/names", getUserNames);

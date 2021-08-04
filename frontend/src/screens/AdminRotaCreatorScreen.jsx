@@ -62,7 +62,7 @@ const AdminRotaCreatorScreen = () => {
       data: { _id },
     }).then((response) => {
       toast.success(`Rota has been deleted`);
-      setUsers(users.filter((user) => user._id !== _id));
+      setRotas(rotas.filter((rota) => rota._id !== _id));
       setSubmitRemove(true);
     });
     //closing modal

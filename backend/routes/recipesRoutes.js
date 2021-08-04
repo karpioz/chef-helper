@@ -19,21 +19,21 @@ import {
 import { protect, adminAuth } from "../middleware/authMiddleware.js";
 
 // routes
-// read all recipes data
+// read all recipes
 router.get("/", getRecipes);
-// read specific recipe data
+// read only bookmarked recipes
 router.get("/bookmarked", getBookmarkedRecipes);
-// read specific recipe data
+// read specific recipe
 router.get("/:id", getRecipeById);
-// read specific recipe data to update
+// read specific recipe to update
 router.get("/update/:id", getRecipeToUpdateById);
 // create new recipe
 router.post("/", createRecipe);
 // delete recipe
 router.delete("/:id", protect, adminAuth, deleteRecipe);
 // update recipe
-router.patch("/update/:id", updateRecipe);
-// update recipe bookmark
-router.patch("/update/bookmark/:id", updateRecipeBookmark);
+router.patch("/update/:id", protect, adminAuth, updateRecipe);
+// update recipe bookmark by recipe's id
+router.patch("/update/bookmark/:id", protect, adminAuth, updateRecipeBookmark);
 
 export default router;

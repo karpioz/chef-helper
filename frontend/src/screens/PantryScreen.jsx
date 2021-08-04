@@ -138,7 +138,6 @@ const PantryScreen = () => {
   };
 
   // Use Effect hooks for fetching all products on page display
-
   useEffect(() => {
     fetchProducts();
   }, []);

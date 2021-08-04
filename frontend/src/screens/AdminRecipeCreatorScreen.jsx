@@ -486,11 +486,11 @@ const AdminRecipeCreatorScreen = () => {
   };
 
   const handleSearchEdamamApi = async () => {
+    setEdamamRecipesLoaded(false);
     const recipeQuery = searchInput;
     const edamamURL = `https://api.edamam.com/search?q=${recipeQuery}&app_id=${process.env.REACT_APP_API_ID}&app_key=${process.env.REACT_APP_API_KEY}&from=0&to=9`;
-    console.log(`looking for... ${recipeQuery}`);
     const response = await axios.get(`${edamamURL}`);
-    console.log(response);
+
     if (response) {
       setEdamamRecipes(response.data.hits);
       setEdamamRecipesLoaded(true);
