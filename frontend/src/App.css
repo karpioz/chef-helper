@@ -70,3 +70,14 @@ main {
 .edamam-search-reset-icon:hover {
   cursor: pointer;
 }
+
+.edamam-recipe-card {
+  position: relative;
+}
+
+.edamam-recipe-bookmark {
+  position: absolute;
+  bottom: 0.5rem;
+  right: 0.5rem;
+  z-index: 2;
+}

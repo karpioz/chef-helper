@@ -1,6 +1,5 @@
 import React from "react";
 import { Table, Button } from "react-bootstrap";
-import { LinkContainer } from "react-router-bootstrap";
 
 const AllRecipesTableComponent = ({
   recipes,

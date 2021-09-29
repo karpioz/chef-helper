@@ -502,6 +502,33 @@ const AdminRecipeCreatorScreen = () => {
     }
   };
 
+  // Bookamrking Edamam Recipe
+  const [bookmarkedEdamamRecipe, setBookmarkedEdamamRecipe] = useState(null);
+
+  const bookmarkEdamamRecipe = (index) => {
+    console.log("click " + index);
+
+    setBookmarkedEdamamRecipe(index);
+    console.log(edamamRecipes[index]);
+
+    const recipeCreatorFormIngrArray = [
+      ...edamamRecipes[index].recipe.ingredients,
+    ];
+
+    setRecipeCreatorData({
+      label: edamamRecipes[index].recipe.label,
+      healthLabels: [...edamamRecipes[index].recipe.healthLabels],
+      image: edamamRecipes[index].recipe.image,
+      ingredientLines: [],
+      ingredients: [...recipeCreatorFormIngrArray],
+      /* {
+          productId: "615444bb12d8860e506ace68",
+          text: edamamRecipes[index].recipe.ingredients.text,
+          weight: edamamRecipes[index].recipe.ingredients.weight,
+        }, */
+    });
+  };
+
   //------------------------
 
   // realtime recipe creator inputs feedback
@@ -651,8 +678,11 @@ const AdminRecipeCreatorScreen = () => {
               <EdamamRecipesComponent
                 className="my-3"
                 edamamRecipes={edamamRecipes}
+                bookmarkEdamamRecipe={bookmarkEdamamRecipe}
+                bookmarkedEdamamRecipe={bookmarkedEdamamRecipe}
               />
             </Container>
+            {JSON.stringify(edamamRecipes)}
           </Row>
         ) : null}
 
